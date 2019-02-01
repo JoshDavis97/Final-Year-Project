@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Maps Prototype</title>
+</head>
+<script src="js/Shop.js"></script>
+<script src="js/SearchModel.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB5RcAn-bzJjBFJIwlzNSY0aJfl7mP-2EE&libraries=places&callback=loadMaps" async defer></script>
+<link href="css/prototype.css" rel="stylesheet" type="text/css">
+<body>
+    <div id="mapDiv"></div>
+    <div id="titleDiv">Maps Prototype</div>
+    <div id="contentDiv">
+        <div id="searchDiv">
+            <form action="">
+                <input name="enterAdr" type="text" id="adrBox" placeholder="Enter an address...">
+                <button type="button" onclick="searchModel.runSearch()">Search</button>
+            </form>
+        </div>
+        <div id="resultsDiv"></div></div>
+    </div>
+
+</body>
+<script>
+    function loadMaps() {
+        map = new google.maps.Map(document.getElementById('mapDiv'), {
+            center: {lat: 0, lng: 0},
+            zoom: 15
+        });
+        service = new google.maps.places.PlacesService(map);
+        geocoder = new google.maps.Geocoder();
+    }
+
+    let searchModel = new SearchModel();
+</script>
+</html>

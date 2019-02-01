@@ -1,0 +1,37 @@
+body {
+    font-family: Verdana, sans-serif;
+    background-color: ghostwhite;
+}
+
+#titleDiv {
+    font-size: 36pt;
+    font-weight: bold;
+    color: gray;
+    text-align: center;
+}
+
+#contentDiv {
+
+    display: inline;
+
+}
+
+#searchDiv {
+    margin-top: 25px;
+    margin-bottom: 25px;
+
+}
+
+#resultsDiv {
+
+}
+
+.result {
+    width: 500px;
+    align-content: center;
+    alignment: center;
+    background-color: darkgrey;
+    border: 2px solid darkslategrey;
+    padding: 2px;
+    margin: 2px;
+}
