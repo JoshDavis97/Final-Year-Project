@@ -1,9 +1,25 @@
+
+
 class SearchModel {
 
     constructor() {
         this.processedResults = [];
         this.timesProcessed = 0;
         this.storeTypes = ['convenience_store', 'gas_station', 'liquor_store', 'supermarket'];
+    }
+
+    locationSearch() {
+        if(navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(this.locationSearchCallback.bind(this));
+        } else {
+            alert("Your browser doesn't support location search.");
+        }
+    }
+
+    locationSearchCallback(position) {
+        let latlng = {lat: position.coords.latitude, lng: position.coords.longitude};
+        this.findOpenStores(service, latlng, 1000);
+        console.log(latlng);
     }
 
     runSearch() {
@@ -67,14 +83,15 @@ class SearchModel {
                     found = false;
 
                 if(this.processedResults.length > 0) {
-                    for(let j = 0; j < this.processedResults.length; j++) {
-                        if(this.processedResults[j].placeId === resultToAdd.placeId) {
+                    for (let j = 0; j < this.processedResults.length; j++) {
+                        if (this.processedResults[j].placeId === resultToAdd.placeId) {
                             found = true;
                             break;
                         }
                     }
-                    if(found === false)
+                    if(found === false) {
                         this.processedResults.push(resultToAdd);
+                    }
                 }
                 else {
                     this.processedResults.push(resultToAdd);
