@@ -11,19 +11,23 @@ body {
 }
 
 #contentDiv {
-
-    display: inline;
+    border: 1px solid black;
+    text-align: center;
+    margin: auto;
 
 }
 
 #searchDiv {
+    display: inline-block;
     margin-top: 25px;
     margin-bottom: 25px;
+    border: 1px solid blue;
+    align-content: center;
 
 }
 
 #resultsDiv {
-
+    display: inline-block;
 }
 
 .result {
