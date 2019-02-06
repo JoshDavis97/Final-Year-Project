@@ -16,6 +16,7 @@ class SearchModel {
 
     locationSearchCallback(position) {
         let latlng = {lat: position.coords.latitude, lng: position.coords.longitude};
+        document.getElementById('resultsDiv').innerHTML = "";
         this.findOpenStores(service, latlng, 1000);
         console.log(latlng);
     }
