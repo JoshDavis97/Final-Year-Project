@@ -10,11 +10,15 @@ body {
     text-align: center;
 }
 
-#contentDiv {
+#content-container {
     border: 1px solid black;
     text-align: center;
     margin: auto;
+}
 
+#results-container {
+    text-align: center;
+    width: 100%;
 }
 
 #searchDiv {
@@ -23,7 +27,6 @@ body {
     margin-bottom: 25px;
     border: 1px solid blue;
     align-content: center;
-
 }
 
 #resultsDiv {
@@ -37,5 +40,5 @@ body {
     background-color: darkgrey;
     border: 2px solid darkslategrey;
     padding: 2px;
-    margin: 2px;
+    margin: 0 auto;
 }

@@ -16,7 +16,7 @@ class SearchModel {
 
     locationSearchCallback(position) {
         let latlng = {lat: position.coords.latitude, lng: position.coords.longitude};
-        document.getElementById('resultsDiv').innerHTML = "";
+        document.getElementById('results-container').innerHTML = "";
         this.findOpenStores(service, latlng, 1000);
         console.log(latlng);
     }
@@ -28,7 +28,7 @@ class SearchModel {
             alert("Please enter an address before searching. Alternatively, use the geolocation feature.")
         }
         else {
-            document.getElementById('resultsDiv').innerHTML = "";
+            document.getElementById('results-container').innerHTML = "";
             this.geocodeAddress(document.getElementById('adrBox').value);
         }
     }
@@ -115,8 +115,9 @@ class SearchModel {
     populateResults() {
         for(let a in this.processedResults) {
             let str = "",
+                resultsContainer = document.getElementById('results-container'),
                 newElement = document.createElement("div"),
-                newNode = resultsDiv.appendChild(newElement);
+                newNode = resultsContainer.appendChild(newElement);
 
             newNode.setAttribute("id", this.processedResults[a].placeId);
             newNode.setAttribute("class", "result");

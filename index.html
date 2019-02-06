@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>offie</title>
+    <title>offie.</title>
 	<link href="css/prototype.css" rel="stylesheet" type="text/css">
 	<script src="js/Shop.js"></script>
 	<script src="js/SearchModel.js"></script>
@@ -13,10 +13,10 @@
 
 <body>
     <div id="mapDiv"></div>
+
+    <div id="titleDiv">offie.</div>
 	
-    <div id="titleDiv">offie</div>
-	
-    <div id="contentDiv">
+    <div id="content-container">
         <div id="searchDiv">
             <form action="javascript:searchModel.runSearch()">
                 <input name="enterAdr" type="text" id="adrBox" placeholder="Enter an address...">
@@ -24,8 +24,11 @@
                 <button type="button" onclick="searchModel.locationSearch()">Search using your location</button>
             </form>
         </div>
-        <div id="resultsDiv"></div>
+        <div id="results-container">
+
+        </div>
     </div>
+
 	
 	<script>
 		function loadMaps() {
