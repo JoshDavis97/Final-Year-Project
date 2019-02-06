@@ -1,17 +1,26 @@
+@font-face {
+    font-family: "Ebrima";
+    src: url(fonts/ebrima.ttf) format("truetype");
+}
+
 body {
-    font-family: Verdana, sans-serif;
-    background-color: ghostwhite;
+    font-family: "Ebrima", sans-serif;
+    background-color: #fafafa;
+}
+
+a {
+    color: #1965ff;
 }
 
 #titleDiv {
-    font-size: 36pt;
-    font-weight: bold;
-    color: gray;
+    font-size: 42pt;
+    font-weight: bolder;
+    color: #949494;
     text-align: center;
 }
 
 #content-container {
-    border: 1px solid black;
+    width: 100%;
     text-align: center;
     margin: auto;
 }
@@ -25,7 +34,6 @@ body {
     display: inline-block;
     margin-top: 25px;
     margin-bottom: 25px;
-    border: 1px solid blue;
     align-content: center;
 }
 
@@ -33,12 +41,17 @@ body {
     display: inline-block;
 }
 
-.result {
+.result, .result-last {
     width: 500px;
-    align-content: center;
-    alignment: center;
-    background-color: darkgrey;
-    border: 2px solid darkslategrey;
+    /*align-content: center;*/
+
+    background-color: #f2f2f2;
+    border: 1px solid #464646;
+    border-bottom: none;
     padding: 2px;
     margin: 0 auto;
+}
+
+.result-last {
+    border-bottom: 1px solid #464646;
 }
