@@ -1,5 +1,3 @@
-
-
 class SearchModel {
 
     constructor() {
@@ -22,11 +20,16 @@ class SearchModel {
         console.log(latlng);
     }
 
+    //TODO - Check what type of input is in search field e.g. address, coords, etc - to avoid performing unnecessary geocode
     runSearch() {
-        //TODO - Check what type of input is in search field e.g. address, coords, etc - to avoid performing unnecessary geocode
-        //TODO - Check if search field is empty - return error
-        document.getElementById('resultsDiv').innerHTML = "";
-        this.geocodeAddress(document.getElementById('adrBox').value);
+
+        if(document.getElementById("adrBox").value === "") {
+            alert("Please enter an address before searching. Alternatively, use the geolocation feature.")
+        }
+        else {
+            document.getElementById('resultsDiv').innerHTML = "";
+            this.geocodeAddress(document.getElementById('adrBox').value);
+        }
     }
 
     geocodeAddress(address) {
