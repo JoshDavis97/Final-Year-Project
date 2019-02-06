@@ -113,22 +113,27 @@ class SearchModel {
     }
 
     populateResults() {
-        for(let a in this.processedResults) {
+        let count = 0;
+        this.processedResults.forEach(function(a) {
+            count++;
             let str = "",
                 resultsContainer = document.getElementById('results-container'),
                 newElement = document.createElement("div"),
                 newNode = resultsContainer.appendChild(newElement);
 
-            newNode.setAttribute("id", this.processedResults[a].placeId);
+            newNode.setAttribute("id", a.placeId);
             newNode.setAttribute("class", "result");
+            if(this.processedResults.length === count)
+                newNode.setAttribute("class", "result-last");
 
-            if(this.processedResults[a].rating !== undefined)
-                str = this.processedResults[a].name +  " : " + this.processedResults[a].rating + " ★" + "</br>" + SearchModel.getMapsUrl(this.processedResults[a]);
+
+            if(a.rating !== undefined)
+                str = a.name +  " : " + a.rating + " ★" + "</br>" + SearchModel.getMapsUrl(a);
             else
-                str = this.processedResults[a].name +  " (no rating)" + "</br>" + SearchModel.getMapsUrl(this.processedResults[a]);
+                str = a.name +  " (no rating)" + "</br>" + SearchModel.getMapsUrl(a);
 
             newNode.innerHTML = str;
-        }
+        }, this);
         this.timesProcessed = 0;
     }
 
