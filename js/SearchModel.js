@@ -17,6 +17,7 @@ class SearchModel {
 
     locationSearchCallback(position) {
         let latlng = {lat: position.coords.latitude, lng: position.coords.longitude};
+        this.userLoc = latlng;
         document.getElementById('results-container').innerHTML = "";
         this.findOpenStores(service, latlng, 1000);
         console.log(latlng);
@@ -82,10 +83,11 @@ class SearchModel {
     }
 
     processResults(results, status) {
-        console.log(results);
         if(status === google.maps.places.PlacesServiceStatus.OK) {
             for(let r in results) {
-                let resultToAdd = new Shop(results[r].name, results[r].vicinity, results[r].rating, results[r].place_id),
+                let latlng = {lat: results[r].geometry.location.lat(), lng: results[r].geometry.location.lng()};
+
+                let resultToAdd = new Shop(results[r].name, results[r].vicinity, results[r].rating, results[r].place_id, this.getDistance(this.userLoc, latlng)),
                     found = false;
 
                 if(this.processedResults.length > 0) {
@@ -116,6 +118,7 @@ class SearchModel {
 
     populateResults() {
         let count = 0;
+        console.log(this.processedResults);
         this.processedResults.forEach(function(a) {
             count++;
             let str = "",
@@ -130,9 +133,9 @@ class SearchModel {
 
 
             if(a.rating !== undefined)
-                str = a.name +  " : " + a.rating + " ★" + "</br>" + SearchModel.getMapsUrl(a);
+                str = a.name +  " : " + a.rating + " ★ : " + a.distance.toFixed(2) + "km away" + "</br>" + SearchModel.getMapsUrl(a);
             else
-                str = a.name +  " (no rating)" + "</br>" + SearchModel.getMapsUrl(a);
+                str = a.name +  " (no rating) " + a.distance.toFixed(2) + "km away" + "</br>" + SearchModel.getMapsUrl(a);
 
             newNode.innerHTML = str;
         }, this);
@@ -140,22 +143,22 @@ class SearchModel {
     }
 
     convertDegreesToRadians(degrees) {
-        return degrees * (Math.PI/180);
+        return degrees * Math.PI / 180;
     }
 
     getDistance(userLoc, shopLoc) {
-        let radius = 6378137,
+        let radius = 6378,
             lat = this.convertDegreesToRadians(userLoc.lat - shopLoc.lat),
             lng = this.convertDegreesToRadians(userLoc.lng - shopLoc.lng);
 
         let a =   Math.sin(lat / 2)
                 * Math.sin(lat / 2)
-                + Math.cos(radius(userLoc.lat))
-                + Math.cos(radius(shopLoc.lat))
+                + Math.cos(this.convertDegreesToRadians(userLoc.lat))
+                * Math.cos(this.convertDegreesToRadians(shopLoc.lat))
                 * Math.sin(lng / 2)
                 * Math.sin(lng / 2);
 
-        let c = 2 * Math.asin(Math.sqrt(a));
+        let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
         return radius * c;
     }
 
