@@ -4,6 +4,7 @@ class SearchModel {
         this.processedResults = [];
         this.timesProcessed = 0;
         this.storeTypes = ['convenience_store', 'gas_station', 'liquor_store', 'supermarket'];
+        this.userLoc = {lat: 0, lng: 0};
     }
 
     locationSearch() {
@@ -56,6 +57,7 @@ class SearchModel {
         geocodeComplete
             .then((fulfilled) => {
                 console.log("geocode complete: " + fulfilled);
+                this.userLoc = latlng;
                 this.findOpenStores(service, latlng, 1000);
             })
             .catch((error) => {
@@ -80,7 +82,7 @@ class SearchModel {
     }
 
     processResults(results, status) {
-        console.log(this);
+        console.log(results);
         if(status === google.maps.places.PlacesServiceStatus.OK) {
             for(let r in results) {
                 let resultToAdd = new Shop(results[r].name, results[r].vicinity, results[r].rating, results[r].place_id),
@@ -135,6 +137,26 @@ class SearchModel {
             newNode.innerHTML = str;
         }, this);
         this.timesProcessed = 0;
+    }
+
+    convertDegreesToRadians(degrees) {
+        return degrees * (Math.PI/180);
+    }
+
+    getDistance(userLoc, shopLoc) {
+        let radius = 6378137,
+            lat = this.convertDegreesToRadians(userLoc.lat - shopLoc.lat),
+            lng = this.convertDegreesToRadians(userLoc.lng - shopLoc.lng);
+
+        let a =   Math.sin(lat / 2)
+                * Math.sin(lat / 2)
+                + Math.cos(radius(userLoc.lat))
+                + Math.cos(radius(shopLoc.lat))
+                * Math.sin(lng / 2)
+                * Math.sin(lng / 2);
+
+        let c = 2 * Math.asin(Math.sqrt(a));
+        return radius * c;
     }
 
     static getMapsUrl(store) {
