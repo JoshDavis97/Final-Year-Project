@@ -121,7 +121,7 @@ class SearchModel {
         console.log(this.processedResults);
         this.processedResults.sort(function(a,b) {
             return a.distance - b.distance;
-        })
+        });
         this.processedResults.forEach(function(a) {
             count++;
             let str = "",
