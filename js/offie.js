@@ -171,10 +171,7 @@ class View {
     populateResults(resultsArray) {
         document.getElementById('results-container').innerHTML = "";
         let count = 0;
-        console.log(resultsArray);
-        resultsArray.sort(function(a,b) {
-            return a.distance - b.distance;
-        });
+        this.utility.sortResults(resultsArray, 'distance');
         resultsArray.forEach(function(a) {
             count++;
             let str = "",
@@ -245,5 +242,26 @@ class Utility {
         url += store.name + "&query_place_id=" + store.placeId;
 
         return linkText.link(url);
+    }
+
+    sortResults(array, sortBy) {
+        if(sortBy === 'distance') {
+            array.sort(function(a,b) {
+                return a.distance - b.distance;
+            });
+        }
+        else if(sortBy === 'rating') {
+            array.sort(function(a,b) {
+                if(a.rating === b.rating) {
+                    return b.distance - a.distance;
+                }
+                return b.rating - a.rating;
+            });
+        }
+        else if(sortBy === 'name') {
+            array.sort(function(a,b) {
+                return a.name - b.name;
+            });
+        }
     }
 }
