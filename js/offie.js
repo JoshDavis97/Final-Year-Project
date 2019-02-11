@@ -25,7 +25,10 @@ class Offie {
         this.results.view = view;
 
         this.view.utility = utility;
+
         this.utility.api_wrapper = api_wrapper;
+        this.utility.results = results;
+        this.utility.view = view;
 
     }
 }
@@ -105,7 +108,6 @@ class Results {
     constructor() {
         this.resultsArray = [];
         this.timesProcessed = 0;
-        this.search = undefined;
         this.utility = undefined;
         this.view = undefined;
         this.api_wrapper = undefined;
@@ -142,7 +144,7 @@ class Results {
 
             this.timesProcessed++;
             if(this.timesProcessed === this.api_wrapper.storeTypes.length) {
-                this.view.populateResults(this.resultsArray);
+                this.view.populateResults(this.resultsArray, 'distance');
                 this.timesProcessed = 0;
             }
         }
@@ -168,10 +170,13 @@ class View {
         this.utility = undefined;
     }
 
-    populateResults(resultsArray) {
+    populateResults(resultsArray, sortType) {
         document.getElementById('results-container').innerHTML = "";
+        if(resultsArray === null) {
+            resultsArray = this.results.resultsArray;
+        }
         let count = 0;
-        this.utility.sortResults(resultsArray, 'distance');
+        this.utility.sortResults(resultsArray, sortType);
         resultsArray.forEach(function(a) {
             count++;
             let str = "",
@@ -192,15 +197,21 @@ class View {
 
             newNode.innerHTML = str;
         }, this);
-
     }
 }
 
 class Utility {
     constructor() {
         this.userLoc = {lat: 0, lng: 0};
-        this.search = undefined;
         this.api_wrapper = undefined;
+        this.results = undefined;
+        this.view = undefined;
+    }
+
+    sortChange(sortType) {
+        if(this.results.resultsArray !== []) {
+            this.view.populateResults(this.results.resultsArray, sortType);
+        }
     }
 
     geolocate() {

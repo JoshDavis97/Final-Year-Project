@@ -24,6 +24,14 @@
                 <button type="button" onclick="offie.utility.geolocate()">Search using your location</button>
             </form>
         </div>
+        <div id="sort-container">
+            <select id="sort-dropdown" onchange="offie.utility.sortChange(this.value.toLowerCase())">
+                <option value="distance">Distance</option>
+                <option value="rating">Rating</option>
+                <option value="name">Name</option>
+            </select>
+        </div>
+
         <div id="results-container">
 
         </div>
