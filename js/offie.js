@@ -144,7 +144,7 @@ class Results {
 
             this.timesProcessed++;
             if(this.timesProcessed === this.api_wrapper.storeTypes.length) {
-                this.view.populateResults(this.resultsArray, 'distance');
+                this.view.populateResults(this.resultsArray, this.utility.getSortType());
                 this.timesProcessed = 0;
             }
         }
@@ -212,6 +212,10 @@ class Utility {
         if(this.results.resultsArray !== []) {
             this.view.populateResults(this.results.resultsArray, sortType);
         }
+    }
+
+    getSortType() {
+        return document.getElementById('sort-dropdown').value;
     }
 
     geolocate() {
