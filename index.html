@@ -6,8 +6,7 @@
     <title>offie.</title>
 	<link rel="stylesheet" href="css/prototype.css"  type="text/css">
     <link rel="icon" type="image/png" href="media/favicon.ico">
-	<script src="js/Shop.js"></script>
-	<script src="js/SearchModel.js"></script>
+	<script src="js/offie.js"></script>
 	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB5RcAn-bzJjBFJIwlzNSY0aJfl7mP-2EE&libraries=places&callback=loadMaps" async defer></script>
 </head>
 
@@ -19,10 +18,10 @@
 	
     <div id="content-container">
         <div id="searchDiv">
-            <form action="javascript:searchModel.runSearch()">
+            <form action="javascript:offie.api_wrapper.runSearch()">
                 <input name="enterAdr" type="text" id="adrBox" placeholder="Enter an address...">
 				<input type="submit" value="Search">
-                <button type="button" onclick="searchModel.locationSearch()">Search using your location</button>
+                <button type="button" onclick="offie.utility.geolocate()">Search using your location</button>
             </form>
         </div>
         <div id="results-container">
@@ -32,16 +31,18 @@
 
 	
 	<script>
-		function loadMaps() {
-			map = new google.maps.Map(document.getElementById('mapDiv'), {
-				center: {lat: 0, lng: 0},
-				zoom: 15
-			});
-			service = new google.maps.places.PlacesService(map);
-			geocoder = new google.maps.Geocoder();
-		}
+        let offie = new Offie();
+        offie.init();
 
-		let searchModel = new SearchModel();
+		function loadMaps() {
+
+            offie.api_wrapper.map = new google.maps.Map(document.getElementById('mapDiv'), {
+                center: {lat: 0, lng: 0},
+                zoom: 15
+            });
+            offie.api_wrapper.service = new google.maps.places.PlacesService(offie.api_wrapper.map);
+            offie.api_wrapper.geocoder = new google.maps.Geocoder();
+		}
 	</script>
 </body>
 
