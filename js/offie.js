@@ -4,18 +4,21 @@ class Offie {
         this.results = undefined;
         this.utility = undefined;
         this.view = undefined;
+        this.settings = undefined;
     }
 
     init() {
         let api_wrapper = new ApiWrapper(),
             results = new Results(),
             utility = new Utility(),
-            view = new View();
+            view = new View(),
+            settings = new Settings();
 
         this.api_wrapper = api_wrapper;
         this.results = results;
         this.utility = utility;
         this.view = view;
+        this.settings = settings;
 
         this.api_wrapper.results = results;
         this.api_wrapper.utility = utility;
@@ -25,20 +28,38 @@ class Offie {
         this.results.view = view;
 
         this.view.utility = utility;
+        this.view.settings = settings;
 
         this.utility.api_wrapper = api_wrapper;
         this.utility.results = results;
         this.utility.view = view;
+        this.utility.settings = settings;
 
     }
 }
 
 class Settings {
     constructor() {
-        this.language = 'english';
+        this.language = 'eng';
         this.units = 'miles';
         this.theme = 'light';
         this.showMap = true;
+    }
+
+    updateSettings() {
+        this.language = document.getElementById('language-select').value;
+        let unitRadios = document.getElementsByName('units');
+        unitRadios.forEach(function(a) {
+            if(a.checked) {
+                this.units = a.value;
+            }
+        }.bind(this));
+
+        if(document.getElementById('darkmode').checked === true)
+            this.theme = 'dark';
+        else
+            this.theme = 'light';
+        console.log(this);
     }
 }
 
@@ -177,6 +198,7 @@ class View {
     constructor() {
         this.results = undefined;
         this.utility = undefined;
+        this.settings = undefined;
     }
 
     populateResults(resultsArray, sortType) {
@@ -188,8 +210,7 @@ class View {
         this.utility.sortResults(resultsArray, sortType);
         resultsArray.forEach(function(a) {
             count++;
-            let str = "",
-                resultsContainer = document.getElementById('results-container'),
+            let resultsContainer = document.getElementById('results-container'),
                 newElement = document.createElement("div"),
                 newNode = resultsContainer.appendChild(newElement);
 
@@ -198,13 +219,19 @@ class View {
             if(resultsArray.length === count)
                 newNode.setAttribute("class", "result-last");
 
-
+            let ratingStr = '';
             if(a.rating !== undefined)
-                str = a.name +  " : " + a.rating + " ★ : " + a.distance.toFixed(2) + "km away" + "</br>" + this.utility.getMapsUrl(a);
+                ratingStr = a.rating + " ★ : ";
             else
-                str = a.name +  " (no rating) " + a.distance.toFixed(2) + "km away" + "</br>" + this.utility.getMapsUrl(a);
+                ratingStr = " (no rating) : ";
 
-            newNode.innerHTML = str;
+            let unitsStr = '';
+            if(this.settings.units = 'miles')
+                unitsStr = 'miles away';
+            else
+                unitsStr = 'km away';
+
+            newNode.innerHTML = a.name +  ratingStr + a.distance.toFixed(2) + unitsStr + "</br>" + this.utility.getMapsUrl(a);
         }, this);
     }
 }
@@ -215,6 +242,7 @@ class Utility {
         this.api_wrapper = undefined;
         this.results = undefined;
         this.view = undefined;
+        this.settings = undefined;
     }
 
     sortChange(sortType) {
@@ -256,7 +284,11 @@ class Utility {
             * Math.sin(lng / 2);
 
         let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        return radius * c;
+        let distance = radius * c;
+        if(this.settings.units = 'miles') {
+            distance = distance * 0.62137;
+        }
+        return distance;
     }
 
     getMapsUrl(store) {

@@ -14,6 +14,24 @@
 <body>
 
     <div id="column-left" class="column">
+        <div id="settingsDiv">
+            <form id="settings-form" action="javascript:offie.settings.updateSettings()">
+                <label for="darkmode">Dark mode:</label>
+                <input type="checkbox" id="darkmode" name="darkmode" value="toggle"><br>
+
+                <label>Units:</label><br>
+                <span>Kilometres</span> <input type="radio" id="units-km" name="units" value="kilometres"><br>
+                <span>Miles</span> <input type="radio" id="units-mi" name="units" value="miles"><br>
+
+                <label for="language-select">Language</label>
+                <select id="language-select">
+                    <option value="eng">English</option>
+                    <option value="swe">Swedish</option>
+                    <option value="nor">Norwegian</option>
+                </select>
+                <input type="submit" value="Update settings">
+            </form>
+        </div>
         <div id="titleDiv">offie.</div>
 
 
