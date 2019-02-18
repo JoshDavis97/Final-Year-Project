@@ -33,6 +33,15 @@ class Offie {
     }
 }
 
+class Settings {
+    constructor() {
+        this.language = 'english';
+        this.units = 'miles';
+        this.theme = 'light';
+        this.showMap = true;
+    }
+}
+
 class ApiWrapper {
     constructor() {
         this.maps = undefined;

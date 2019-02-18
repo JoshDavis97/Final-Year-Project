@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>offie.</title>
-	<link rel="stylesheet" href="css/style.css"  type="text/css">
+	<link rel="stylesheet" href="css/mapstyle.css"  type="text/css">
     <link rel="icon" type="image/png" href="media/favicon.ico">
 	<script src="js/offie.js"></script>
 	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB5RcAn-bzJjBFJIwlzNSY0aJfl7mP-2EE&libraries=places&callback=loadMaps" async defer></script>
@@ -12,30 +12,36 @@
 
 
 <body>
-    <div id="mapDiv"></div>
 
-    <div id="titleDiv">offie.</div>
-	
-    <div id="content-container">
-        <div id="searchDiv">
+    <div id="column-left" class="column">
+        <div id="titleDiv">offie.</div>
+
+
+            <div id="searchDiv">
             <form action="javascript:offie.api_wrapper.runSearch()">
-                <input name="enterAdr" type="text" id="adrBox" placeholder="Enter an address...">
-				<input type="submit" value="Search">
+                <input name="enterAdr" type="text" id="adrBox" placeholder="Enter an address..."><br>
+                <input type="submit" value="Search">
                 <button type="button" onclick="offie.utility.geolocate()">Search using your location</button>
             </form>
-        </div>
-        <div id="sort-container">
-            <select id="sort-dropdown" onchange="offie.utility.sortChange(this.value.toLowerCase())">
-                <option value="distance">Distance</option>
-                <option value="rating">Rating</option>
-                <option value="name">Name</option>
-            </select>
+            </div>
+            <div id="sort-container">
+                <select id="sort-dropdown" onchange="offie.utility.sortChange(this.value.toLowerCase())">
+                    <option value="distance">Distance</option>
+                    <option value="rating">Rating</option>
+                    <option value="name">Name</option>
+                </select>
+            </div>
+
+            <div id="results-container">
+            </div>
         </div>
 
-        <div id="results-container">
 
-        </div>
+    <div id="column-right" class="column">
+        <div id="mapDiv"></div>
     </div>
+
+
 
 	
 	<script>

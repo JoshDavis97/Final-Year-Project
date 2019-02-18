@@ -6,8 +6,8 @@
 body {
     font-family: "Ebrima", sans-serif;
     background-color: #fafafa;
-    display: flex;
     margin: 0;
+    display: flex;
 }
 
 a {
@@ -27,10 +27,18 @@ a {
 
 #column-left {
     display: inline-flex;
+    width: 600px;
+    margin-left: 5px;
+    text-align: center;
+    overflow-y: auto;
+    flex-shrink: 0;
 }
 
 #column-right {
     display: inline-flex;
+    width: 800px;
+    flex-grow: 1;
+
 }
 
 #titleDiv {
@@ -48,6 +56,8 @@ a {
     width: 100%;
     text-align: center;
     margin: auto;
+    height: auto;
+    overflow-y: auto;
 }
 
 #results-container {
