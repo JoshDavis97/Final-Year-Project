@@ -8,33 +8,41 @@ class Offie {
     }
 
     init() {
-        let api_wrapper = new ApiWrapper(),
-            results = new Results(),
-            utility = new Utility(),
-            view = new View(),
-            settings = new Settings();
+        try {
+            let api_wrapper = new ApiWrapper(),
+                results = new Results(),
+                utility = new Utility(),
+                view = new View(),
+                settings = new Settings();
 
-        this.api_wrapper = api_wrapper;
-        this.results = results;
-        this.utility = utility;
-        this.view = view;
-        this.settings = settings;
+            this.api_wrapper = api_wrapper;
+            this.results = results;
+            this.utility = utility;
+            this.view = view;
+            this.settings = settings;
 
-        this.api_wrapper.results = results;
-        this.api_wrapper.utility = utility;
+            this.api_wrapper.results = results;
+            this.api_wrapper.utility = utility;
 
-        this.results.api_wrapper = api_wrapper;
-        this.results.utility = utility;
-        this.results.view = view;
+            this.results.api_wrapper = api_wrapper;
+            this.results.utility = utility;
+            this.results.view = view;
 
-        this.view.utility = utility;
-        this.view.settings = settings;
+            this.view.utility = utility;
+            this.view.settings = settings;
+            this.view.api_wrapper = api_wrapper;
 
-        this.utility.api_wrapper = api_wrapper;
-        this.utility.results = results;
-        this.utility.view = view;
-        this.utility.settings = settings;
+            this.utility.api_wrapper = api_wrapper;
+            this.utility.results = results;
+            this.utility.view = view;
+            this.utility.settings = settings;
 
+            return this;
+        }
+        catch(error) {
+            console.error(error);
+            return false;
+        }
     }
 }
 
@@ -59,28 +67,29 @@ class Settings {
             this.theme = 'dark';
         else
             this.theme = 'light';
-        console.log(this);
+        return this;
     }
 }
 
 class ApiWrapper {
     constructor() {
-        this.maps = undefined;
+        this.map = undefined;
         this.service = undefined;
         this.geocoder = undefined;
         this.results = undefined;
         this.utility = undefined;
-        this.userLoc = undefined;
         this.storeTypes = ['convenience_store', 'gas_station', 'liquor_store', 'supermarket'];
     }
 
     runSearch() {
         if(document.getElementById("adrBox").value === "") {
-            alert("Please enter an address before searching. Alternatively, use the geolocation feature.")
+            alert("Please enter an address before searching. Alternatively, use the geolocation feature.");
+            return false;
         }
         else {
             document.getElementById('results-container').innerHTML = "";
             this.geocodeAddress(document.getElementById('adrBox').value);
+            return true;
         }
     }
 
@@ -108,7 +117,7 @@ class ApiWrapper {
             .then((fulfilled) => {
                 console.log("geocode complete: " + fulfilled);
                 this.utility.userLoc = latlng;
-                console.log(this.service);
+                this.map.panTo(this.utility.userLoc)
                 this.findOpenStores(latlng, 1000);
             })
             .catch((error) => {
@@ -149,6 +158,7 @@ class Results {
                 let latlng = {lat: results[r].geometry.location.lat(), lng: results[r].geometry.location.lng()};
                 let resultToAdd = new Shop( results[r].name,
                     results[r].vicinity,
+                    latlng,
                     results[r].rating,
                     results[r].place_id,
                     this.utility.getDistance(latlng)
@@ -185,9 +195,10 @@ class Results {
 }
 
 class Shop {
-    constructor(name, address, rating, placeId, distance) {
+    constructor(name, address, latlng, rating, placeId, distance) {
         this.name = name;
         this.address = address;
+        this.latlng = latlng;
         this.rating = rating;
         this.placeId = placeId;
         this.distance = distance;
@@ -199,6 +210,7 @@ class View {
         this.results = undefined;
         this.utility = undefined;
         this.settings = undefined;
+        this.api_wrapper = undefined;
     }
 
     populateResults(resultsArray, sortType) {
@@ -213,6 +225,7 @@ class View {
             let resultsContainer = document.getElementById('results-container'),
                 newElement = document.createElement("div"),
                 newNode = resultsContainer.appendChild(newElement);
+
 
             newNode.setAttribute("id", a.placeId);
             newNode.setAttribute("class", "result");
@@ -231,7 +244,19 @@ class View {
             else
                 unitsStr = 'km away';
 
-            newNode.innerHTML = a.name +  ratingStr + a.distance.toFixed(2) + unitsStr + "</br>" + this.utility.getMapsUrl(a);
+            let str = a.name +  ratingStr + a.distance.toFixed(2) + unitsStr + "</br>" + this.utility.getMapsUrl(a);
+            let infoWindow = new google.maps.InfoWindow({
+                content: str
+            });
+            let marker = new google.maps.Marker({
+                position: a.latlng,
+                map: this.api_wrapper.map,
+                title: a.name
+            });
+            marker.addListener('click', function() {
+                infoWindow.open(this.api_wrapper.map, marker);
+            }.bind(this));
+            newNode.innerHTML = str;
         }, this);
     }
 }
