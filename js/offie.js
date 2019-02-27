@@ -37,6 +37,8 @@ class Offie {
             this.utility.view = view;
             this.utility.settings = settings;
 
+            this.settings.view = view;
+
             return this;
         }
         catch(error) {
@@ -52,6 +54,7 @@ class Settings {
         this.units = 'miles';
         this.theme = 'light';
         this.showMap = true;
+        this.view = undefined;
     }
 
     updateSettings() {
@@ -67,6 +70,9 @@ class Settings {
             this.theme = 'dark';
         else
             this.theme = 'light';
+
+        this.view.changeStyle();
+
         return this;
     }
 }
@@ -258,6 +264,30 @@ class View {
             }.bind(this));
             newNode.innerHTML = str;
         }, this);
+    }
+
+    changeStyle() {
+        let oldTheme = document.getElementById('css-theme'),
+            newTheme = document.createElement('link');
+
+        newTheme.setAttribute('rel', 'stylesheet');
+        newTheme.setAttribute('type', 'text/css');
+        newTheme.setAttribute('id', 'css-theme');
+
+        if(oldTheme.href.includes('dark'))
+            newTheme.setAttribute('href', 'css/light.css');
+        else
+            newTheme.setAttribute('href', 'css/dark.css');
+
+        try {
+            oldTheme.parentNode.replaceChild(newTheme, oldTheme);
+            return newTheme;
+        }
+        catch(error) {
+            console.log("ERROR: Could not change style - " + error);
+            return error;
+        }
+
     }
 }
 
