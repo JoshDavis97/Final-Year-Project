@@ -41,6 +41,10 @@ class Offie {
             this.settings.view = view;
             this.settings.loadSettings();
 
+            document.getElementById('settings-span').addEventListener('click', function() {
+                this.settings.settingsToggle();
+            }.bind(this));
+
 
             return this;
         }
@@ -57,7 +61,19 @@ class Settings {
         this.units = 'miles';
         this.theme = 'light';
         this.showMap = true;
+        this.hidden = true;
         this.view = undefined;
+    }
+
+    settingsToggle() {
+        if(this.hidden) {
+            document.getElementById('settingsDiv').style.display = 'inline';
+            this.hidden = false;
+        }
+        else {
+            document.getElementById('settingsDiv').style.display = 'none';
+            this.hidden = true;
+        }
     }
 
     loadSettings() {

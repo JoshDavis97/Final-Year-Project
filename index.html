@@ -15,21 +15,32 @@
 <body>
 
     <div id="column-left" class="column">
+        <span id="settings-span">Settings</span>
         <div id="settingsDiv">
+            <h2>Settings.</h2>
             <form id="settings-form" action="javascript:offie.settings.updateSettings()">
+                <h3>Theme</h3>
                 <label for="darkmode">Dark mode:</label>
                 <input type="checkbox" id="darkmode" name="darkmode" value="toggle"><br>
 
-                <label>Units:</label><br>
-                <span>Kilometres</span> <input type="radio" id="units-km" name="units" value="kilometres"><br>
-                <span>Miles</span> <input type="radio" id="units-mi" name="units" value="miles"><br>
+                <h3>Units</h3>
+                <table>
+                    <tr>
+                        <td><label for="units-km">Kilometres</label></td>
+                        <td><input type="radio" id="units-km" class="unit-radios" name="units" value="kilometres"><br></td>
+                    </tr>
+                    <tr>
+                        <td><label for="units-mi">Miles</label></td>
+                        <td><input type="radio" id="units-mi" class="unit-radios" name="units" value="miles"><br></td>
+                    </tr>
+                </table>
 
-                <label for="language-select">Language</label>
+                <h3>Language</h3>
                 <select id="language-select">
                     <option value="eng">English</option>
                     <option value="swe">Swedish</option>
                     <option value="nor">Norwegian</option>
-                </select>
+                </select><br><br>
                 <input type="submit" value="Update settings">
             </form>
         </div>
