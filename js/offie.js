@@ -57,14 +57,18 @@ class Settings {
         this.theme = 'light';
         this.showMap = true;
         this.view = undefined;
+        this.test = 'test1';
     }
 
     updateSettings() {
         this.language = document.getElementById('language-select').value;
         let unitRadios = document.getElementsByName('units');
         unitRadios.forEach(function(a) {
+            console.log(a);
             if(a.checked) {
+                console.log(a.value);
                 this.units = a.value;
+                console.log(this.units);
             }
         }.bind(this));
 
@@ -73,7 +77,10 @@ class Settings {
         else
             this.theme = 'light';
 
+        this.test = 'test2';
         this.view.changeStyle();
+
+        console.log(this);
 
         return this;
     }
@@ -247,7 +254,7 @@ class View {
                 ratingStr = " (no rating) : ";
 
             let unitsStr = '';
-            if(this.settings.units = 'miles')
+            if(this.settings.units === 'miles')
                 unitsStr = 'miles away';
             else
                 unitsStr = 'km away';
@@ -357,7 +364,9 @@ class Utility {
 
         let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
         let distance = radius * c;
-        if(this.settings.units = 'miles') {
+        console.log(this.settings);
+        console.log(this.settings.units);
+        if(this.settings.units === 'miles') {
             distance = distance * 0.62137;
         }
         return distance;
