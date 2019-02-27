@@ -31,6 +31,7 @@ class Offie {
             this.view.utility = utility;
             this.view.settings = settings;
             this.view.api_wrapper = api_wrapper;
+            this.view.setStyleFromCookie();
 
             this.utility.api_wrapper = api_wrapper;
             this.utility.results = results;
@@ -38,6 +39,7 @@ class Offie {
             this.utility.settings = settings;
 
             this.settings.view = view;
+
 
             return this;
         }
@@ -266,21 +268,36 @@ class View {
         }, this);
     }
 
+    setStyleFromCookie() {
+        let cookie = document.cookie;
+
+        if(cookie === 'theme=dark') {
+            this.changeStyle();
+        }
+
+    }
+
     changeStyle() {
         let oldTheme = document.getElementById('css-theme'),
-            newTheme = document.createElement('link');
+            newTheme = document.createElement('link'),
+            cookieStr = '';
 
         newTheme.setAttribute('rel', 'stylesheet');
         newTheme.setAttribute('type', 'text/css');
         newTheme.setAttribute('id', 'css-theme');
 
-        if(oldTheme.href.includes('dark'))
+        if(oldTheme.href.includes('dark')) {
             newTheme.setAttribute('href', 'css/light.css');
-        else
+            cookieStr = "theme=light";
+        }
+        else {
             newTheme.setAttribute('href', 'css/dark.css');
+            cookieStr = "theme=dark";
+        }
 
         try {
             oldTheme.parentNode.replaceChild(newTheme, oldTheme);
+            document.cookie = cookieStr;
             return newTheme;
         }
         catch(error) {
