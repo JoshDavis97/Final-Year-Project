@@ -31,7 +31,7 @@ class Offie {
             this.view.utility = utility;
             this.view.settings = settings;
             this.view.api_wrapper = api_wrapper;
-            this.view.setStyleFromCookie();
+            this.view.initSettings();
 
             this.utility.api_wrapper = api_wrapper;
             this.utility.results = results;
@@ -39,6 +39,7 @@ class Offie {
             this.utility.settings = settings;
 
             this.settings.view = view;
+            this.settings.loadSettings();
 
 
             return this;
@@ -57,7 +58,18 @@ class Settings {
         this.theme = 'light';
         this.showMap = true;
         this.view = undefined;
-        this.test = 'test1';
+    }
+
+    loadSettings() {
+        let cookie = document.cookie;
+
+        if(cookie.includes('theme=dark')) {
+            this.theme = 'dark';
+        }
+
+        if(cookie.includes('units=kilometres')) {
+            this.units = 'kilometres';
+        }
     }
 
     updateSettings() {
@@ -71,15 +83,16 @@ class Settings {
             }
         }.bind(this));
 
-        if(document.getElementById('darkmode').checked === true)
-            this.theme = 'dark';
-        else
+        if(document.getElementById('darkmode').checked === true) {
+            if(document.cookie.includes('theme=light')) {
+                this.view.changeStyle();
+                this.theme = 'dark';
+            }
+        }
+        else if(document.cookie.includes('theme=dark')) {
+            this.view.changeStyle();
             this.theme = 'light';
-
-        this.test = 'test2';
-        this.view.changeStyle();
-
-        console.log(this);
+        }
 
         return this;
     }
@@ -274,13 +287,36 @@ class View {
         }, this);
     }
 
+    initSettings() {
+        let cookie = document.cookie;
+
+        if(cookie.includes('theme=dark')) {
+            this.changeStyle();
+            document.getElementById('darkmode').checked = true;
+        }
+
+        if(cookie.includes('units=miles')) {
+            document.getElementById('units-mi').checked = true;
+        }
+        else {
+            document.getElementById('units-km').checked = true;
+        }
+    }
+
     setStyleFromCookie() {
         let cookie = document.cookie;
 
-        if(cookie === 'theme=dark') {
+        if(cookie.includes('theme=dark')) {
             this.changeStyle();
+            document.getElementById('darkmode').checked = true;
         }
 
+        if(cookie.includes('units=miles')) {
+            document.getElementById('units-mi').checked = true;
+        }
+        else {
+            document.getElementById('units-km').checked = true;
+        }
     }
 
     changeStyle() {
