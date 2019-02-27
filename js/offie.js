@@ -66,9 +66,8 @@ class Settings {
         unitRadios.forEach(function(a) {
             console.log(a);
             if(a.checked) {
-                console.log(a.value);
                 this.units = a.value;
-                console.log(this.units);
+                document.cookie = "units=" + a.value;
             }
         }.bind(this));
 
@@ -356,16 +355,15 @@ class Utility {
             lng = Utility.convertDegreesToRadians(this.userLoc.lng - shopLoc.lng);
 
         let a =   Math.sin(lat / 2)
-            * Math.sin(lat / 2)
-            + Math.cos(Utility.convertDegreesToRadians(this.userLoc.lat))
-            * Math.cos(Utility.convertDegreesToRadians(this.userLoc.lat))
-            * Math.sin(lng / 2)
-            * Math.sin(lng / 2);
+                * Math.sin(lat / 2)
+                + Math.cos(Utility.convertDegreesToRadians(this.userLoc.lat))
+                * Math.cos(Utility.convertDegreesToRadians(this.userLoc.lat))
+                * Math.sin(lng / 2)
+                * Math.sin(lng / 2);
 
         let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
         let distance = radius * c;
-        console.log(this.settings);
-        console.log(this.settings.units);
+
         if(this.settings.units === 'miles') {
             distance = distance * 0.62137;
         }
