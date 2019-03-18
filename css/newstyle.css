@@ -8,10 +8,10 @@ body {
     margin: 0;
     padding: 2px;
     display: flex;
+    height: 100%;
 }
 
 #column-left {
-    background: red;
     width: 50%;
     display: -webkit-box;
     display: -moz-box;
@@ -34,19 +34,16 @@ body {
 }
 
 #searchDiv {
-    align-content: center;
-    align-items: center;
     position: relative;
-    display: inline-flex;
 }
 
 #searchDiv input {
     width: 250px;
     height: 30px;
-    /*background: #f2f2f2 url('../media/geo_icon_dark.png') no-repeat right top;*/
-    background-size: contain;
     box-sizing: border-box;
     display: block;
+    border: 2px solid #f2f2f2;
+    padding: 2px;
 }
 
 #searchDiv img {
@@ -55,19 +52,46 @@ body {
     right: 5px;
 }
 
+#sort-container select{
+    border: 2px solid #f2f2f2;
+    padding: 2px;
+}
+
 #results-container {
     text-align: center;
     width: 100%;
+    height: 100%;
     overflow: scroll;
+    -webkit-overflow-scrolling: auto;
+}
+
+.result, .result-last {
+    width: 375px;
+    /*align-content: center;*/
+    border: 1px solid #464646;
+    border-bottom: none;
+    padding: 2px;
+    margin: 0 auto;
+}
+
+.result-last {
+    border-bottom: 1px solid #464646;
 }
 
 #column-right {
     background: blue;
     width: 50%;
+    height: 300px;
 }
 
 #settings-icon {
     position: fixed;
+}
+
+#settings-close-icon {
+    position: absolute;
+    right: 0px;
+    top: 5px;
 }
 
 #settingsDiv {
@@ -77,6 +101,7 @@ body {
     padding: 5px 5px 5px 5px;
     width: 200px;
     z-index: 999;
+    border: 2px solid #4d4d4d;
 }
 
 #settingsDiv h2 {
@@ -87,8 +112,10 @@ body {
     margin: 3px 0px 0px;
 }
 
-#settings-close-icon {
-    position: absolute;
-    right: 0px;
-    top: 5px;
+#footer {
+    position: relative;
+    bottom: 1px;
+    left: 1px;
+    z-index: 999;
 }
+

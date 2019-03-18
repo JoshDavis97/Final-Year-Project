@@ -14,6 +14,7 @@
 
 <body>
     <img src="media/settings_icon.png" id="settings-icon" alt="Settings" width="24" height="24">
+
     <div id="settingsDiv">
         <h2>Settings.</h2>
         <img src="media/close_icon.png" id="settings-close-icon" width="30" height="30">
@@ -43,28 +44,31 @@
             <input type="submit" value="Update settings">
         </form>
     </div>
+
     <div id="column-left" class="column">
 
-        <div id="titleDiv">offie.</div>
-
+        <div id="header-div">
+            <div id="titleDiv">offie.</div>
 
             <div id="searchDiv">
             <form action="javascript:offie.api_wrapper.runSearch()">
                 <input name="enterAdr" type="text" id="adrBox" placeholder="Enter an address..."><br>
                 <img src="media/geo_icon_dark.png" id="geolocate-button">
-                <input type="submit" value="Search">
             </form>
             </div>
+
             <div id="sort-container">
+                <span>Sort by: </span>
                 <select id="sort-dropdown" onchange="offie.utility.sortChange(this.value.toLowerCase())">
                     <option value="distance">Distance</option>
                     <option value="rating">Rating</option>
                     <option value="name">Name</option>
                 </select>
             </div>
+        </div>
 
-            <div id="results-container">
-            </div>
+        <div id="results-container"></div>
+
         <div id="footer">
             <img src="media/powered_by_google_on_white.png" alt="Powered by Google">
         </div>
@@ -76,9 +80,6 @@
         <div id="mapDiv"></div>
     </div>
 
-
-
-	
 	<script>
         let offie = new Offie();
         offie.init();
