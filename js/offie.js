@@ -53,7 +53,6 @@ class Offie {
                 this.utility.geolocate();
             }.bind(this));
 
-
             return this;
         }
         catch(error) {
@@ -424,6 +423,7 @@ class Utility {
             navigator.geolocation.getCurrentPosition(function(position) {
                 let latlng = {lat: position.coords.latitude, lng: position.coords.longitude};
                 this.userLoc = latlng;
+                this.api_wrapper.map.panTo(this.userLoc);
                 this.api_wrapper.findOpenStores(latlng, 1000);
             }.bind(this));
         } else {
