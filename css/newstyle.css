@@ -74,4 +74,21 @@ body {
     text-align: left;
     display: none;
     position: fixed;
+    padding: 5px 5px 5px 5px;
+    width: 200px;
+    z-index: 999;
+}
+
+#settingsDiv h2 {
+    margin-top: 0px;
+}
+
+#settingsDiv h3 {
+    margin: 3px 0px 0px;
+}
+
+#settings-close-icon {
+    position: absolute;
+    right: 0px;
+    top: 5px;
 }

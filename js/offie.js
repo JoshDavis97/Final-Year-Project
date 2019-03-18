@@ -45,6 +45,10 @@ class Offie {
                 this.settings.settingsToggle();
             }.bind(this));
 
+            document.getElementById('settings-close-icon').addEventListener('click', function() {
+                this.settings.settingsToggle();
+            }.bind(this));
+
             document.getElementById('geolocate-button').addEventListener('click', function() {
                 this.utility.geolocate();
             }.bind(this));
