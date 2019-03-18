@@ -41,8 +41,12 @@ class Offie {
             this.settings.view = view;
             this.settings.loadSettings();
 
-            document.getElementById('settings-span').addEventListener('click', function() {
+            document.getElementById('settings-icon').addEventListener('click', function() {
                 this.settings.settingsToggle();
+            }.bind(this));
+
+            document.getElementById('geolocate-button').addEventListener('click', function() {
+                this.utility.geolocate();
             }.bind(this));
 
 
@@ -100,7 +104,7 @@ class Settings {
         }.bind(this));
 
         if(document.getElementById('darkmode').checked === true) {
-            if(document.cookie.includes('theme=light')) {
+            if(!document.cookie.includes('theme=dark')) {
                 this.view.changeStyle();
                 this.theme = 'dark';
             }
@@ -131,9 +135,27 @@ class ApiWrapper {
         }
         else {
             document.getElementById('results-container').innerHTML = "";
+            this.results.resultsArray = [];
             this.geocodeAddress(document.getElementById('adrBox').value);
             return true;
         }
+    }
+
+    getDetails(placeId) {
+        let request = {
+            placeId: placeId,
+            fields: ['opening_hours']
+        };
+
+        this.service.getDetails(request, function(place, status) {
+            if(status == google.maps.places.PlacesServiceStatus.OK) {
+                console.log(place);
+            }
+            else {
+                console.log("Could not get opening times: " + status);
+            }
+        })
+
     }
 
     geocodeAddress(address) {
@@ -269,7 +291,7 @@ class View {
                 newElement = document.createElement("div"),
                 newNode = resultsContainer.appendChild(newElement);
 
-
+            this.api_wrapper.getDetails(a.placeId);
             newNode.setAttribute("id", a.placeId);
             newNode.setAttribute("class", "result");
             if(resultsArray.length === count)

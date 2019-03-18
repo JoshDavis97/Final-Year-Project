@@ -1,0 +1,77 @@
+@font-face {
+    font-family: "Ebrima";
+    src: url(fonts/ebrima.ttf) format("truetype");
+}
+
+body {
+    font-family: "Ebrima", sans-serif;
+    margin: 0;
+    padding: 2px;
+    display: flex;
+}
+
+#column-left {
+    background: red;
+    width: 50%;
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -moz-flex;
+    display: -webkit-flex;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+#titleDiv {
+    font-size: 42pt;
+    font-weight: bolder;
+    text-align: center;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
+
+#searchDiv {
+    align-content: center;
+    align-items: center;
+    position: relative;
+    display: inline-flex;
+}
+
+#searchDiv input {
+    width: 250px;
+    height: 30px;
+    /*background: #f2f2f2 url('../media/geo_icon_dark.png') no-repeat right top;*/
+    background-size: contain;
+    box-sizing: border-box;
+    display: block;
+}
+
+#searchDiv img {
+    position: absolute;
+    top: 2px;
+    right: 5px;
+}
+
+#results-container {
+    text-align: center;
+    width: 100%;
+    overflow: scroll;
+}
+
+#column-right {
+    background: blue;
+    width: 50%;
+}
+
+#settings-icon {
+    position: fixed;
+}
+
+#settingsDiv {
+    text-align: left;
+    display: none;
+    position: fixed;
+}

@@ -11,6 +11,11 @@ a {
     color: #fbfbfb;
 }
 
+#settingsDiv {
+    background-color: #4d4d4d;
+}
+
 .result, .result-last {
     background-color: #4d4d4d;
 }
+
