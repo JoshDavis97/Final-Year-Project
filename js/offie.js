@@ -303,7 +303,7 @@ class View {
 
             let ratingStr = '';
             if(a.rating !== undefined)
-                ratingStr = a.rating + " ★ : ";
+                ratingStr = " : " + a.rating + " ★ : ";
             else
                 ratingStr = " (no rating) : ";
 
@@ -364,23 +364,31 @@ class View {
     changeStyle() {
         let oldTheme = document.getElementById('css-theme'),
             newTheme = document.createElement('link'),
+            oldGLogo = document.getElementById('google-logo'),
+            newGLogo = document.createElement('img'),
             cookieStr = '';
 
         newTheme.setAttribute('rel', 'stylesheet');
         newTheme.setAttribute('type', 'text/css');
         newTheme.setAttribute('id', 'css-theme');
 
+        newGLogo.setAttribute('alt', 'Powered by Google');
+        newGLogo.setAttribute('id', 'google-logo');
+
         if(oldTheme.href.includes('dark')) {
             newTheme.setAttribute('href', 'css/light.css');
+            newGLogo.setAttribute('src', 'media/powered_by_google_on_white.png');
             cookieStr = "theme=light";
         }
         else {
             newTheme.setAttribute('href', 'css/dark.css');
+            newGLogo.setAttribute('src', 'media/powered_by_google_on_non_white.png');
             cookieStr = "theme=dark";
         }
 
         try {
             oldTheme.parentNode.replaceChild(newTheme, oldTheme);
+            oldGLogo.parentNode.replaceChild(newGLogo, oldGLogo);
             document.cookie = cookieStr;
             return newTheme;
         }
