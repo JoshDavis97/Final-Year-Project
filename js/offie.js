@@ -37,21 +37,12 @@ class Offie {
             this.utility.results = results;
             this.utility.view = view;
             this.utility.settings = settings;
+            this.utility.addEventListeners();
 
             this.settings.view = view;
             this.settings.loadSettings();
 
-            document.getElementById('settings-icon').addEventListener('click', function() {
-                this.settings.settingsToggle();
-            }.bind(this));
 
-            document.getElementById('settings-close-icon').addEventListener('click', function() {
-                this.settings.settingsToggle();
-            }.bind(this));
-
-            document.getElementById('geolocate-button').addEventListener('click', function() {
-                this.utility.geolocate();
-            }.bind(this));
 
             return this;
         }
@@ -73,12 +64,15 @@ class Settings {
     }
 
     settingsToggle() {
+        console.log(this.hidden);
         if(this.hidden) {
             document.getElementById('settingsDiv').style.display = 'inline';
             this.hidden = false;
+            console.log();
         }
         else {
             document.getElementById('settingsDiv').style.display = 'none';
+            console.log("not");
             this.hidden = true;
         }
     }
@@ -383,6 +377,8 @@ class View {
 
         newCloseIcon.setAttribute('id', 'settings-close-icon');
         newCloseIcon.setAttribute('alt', 'Close settings pane');
+        newCloseIcon.setAttribute('width', '24px');
+        newCloseIcon.setAttribute('height', '24px');
 
         if(oldTheme.href.includes('dark')) {
             newTheme.setAttribute('href', 'css/light.css');
@@ -500,5 +496,19 @@ class Utility {
                 return a.name - b.name;
             });
         }
+    }
+
+    addEventListeners() {
+        document.getElementById('settings-icon').addEventListener('click', function() {
+            this.settings.settingsToggle();
+        }.bind(this));
+
+        document.getElementById('settings-close-icon').addEventListener('click', function() {
+            this.settings.settingsToggle();
+        }.bind(this));
+
+        document.getElementById('geolocate-button').addEventListener('click', function() {
+            this.geolocate();
+        }.bind(this));
     }
 }
