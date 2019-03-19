@@ -13,6 +13,7 @@ a {
 
 #settingsDiv {
     background-color: #4d4d4d;
+    border: 2px solid #fbfbfb;
 }
 
 .result, .result-last {

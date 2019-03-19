@@ -365,6 +365,10 @@ class View {
             newTheme = document.createElement('link'),
             oldGLogo = document.getElementById('google-logo'),
             newGLogo = document.createElement('img'),
+            oldGeoIcon = document.getElementById('geolocate-button'),
+            newGeoIcon = document.createElement('img'),
+            oldCloseIcon = document.getElementById('settings-close-icon'),
+            newCloseIcon = document.createElement('img'),
             cookieStr = '';
 
         newTheme.setAttribute('rel', 'stylesheet');
@@ -374,20 +378,32 @@ class View {
         newGLogo.setAttribute('alt', 'Powered by Google');
         newGLogo.setAttribute('id', 'google-logo');
 
+        newGeoIcon.setAttribute('id', 'geolocate-button');
+        newGeoIcon.setAttribute('alt', 'Search by location');
+
+        newCloseIcon.setAttribute('id', 'settings-close-icon');
+        newCloseIcon.setAttribute('alt', 'Close settings pane');
+
         if(oldTheme.href.includes('dark')) {
             newTheme.setAttribute('href', 'css/light.css');
             newGLogo.setAttribute('src', 'media/powered_by_google_on_white.png');
+            newGeoIcon.setAttribute('src', 'media/geo_icon_light.png');
+            newCloseIcon.setAttribute('src', 'media/close_icon.png');
             cookieStr = "theme=light";
         }
         else {
             newTheme.setAttribute('href', 'css/dark.css');
             newGLogo.setAttribute('src', 'media/powered_by_google_on_non_white.png');
+            newGeoIcon.setAttribute('src', 'media/geo_icon_dark.png');
+            newCloseIcon.setAttribute('src', 'media/close_icon_dark.png');
             cookieStr = "theme=dark";
         }
 
         try {
             oldTheme.parentNode.replaceChild(newTheme, oldTheme);
             oldGLogo.parentNode.replaceChild(newGLogo, oldGLogo);
+            oldGeoIcon.parentNode.replaceChild(newGeoIcon, oldGeoIcon);
+            oldCloseIcon.parentNode.replaceChild(newCloseIcon, oldCloseIcon);
             document.cookie = cookieStr;
             return newTheme;
         }
