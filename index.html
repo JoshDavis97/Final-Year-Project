@@ -9,6 +9,7 @@
     <link rel="icon" type="image/png" href="media/favicon.ico">
 	<script src="js/offie.js"></script>
 	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB5RcAn-bzJjBFJIwlzNSY0aJfl7mP-2EE&libraries=places&callback=loadMaps" async defer></script>
+
 </head>
 
 
@@ -18,7 +19,7 @@
     <div id="settingsDiv">
         <h2>Settings.</h2>
         <img src="media/close_icon_dark.png" id="settings-close-icon" width="24" height="24" alt="Close settings pane">
-        <form id="settings-form" action="javascript:offie.settings.updateSettings()">
+        <form id="settings-form" onsubmit="return false;">
             <h3>Theme</h3>
             <label for="darkmode">Dark mode:</label>
             <input type="checkbox" id="darkmode" name="darkmode" value="toggle"><br>
@@ -41,7 +42,7 @@
                 <option value="swe">Swedish</option>
                 <option value="nor">Norwegian</option>
             </select><br><br>
-            <input type="submit" value="Update settings">
+            <input type="submit" value="Update settings" id="settings-submit">
         </form>
     </div>
 
@@ -51,7 +52,7 @@
             <div id="titleDiv">offie.</div><br>
 
             <div id="searchDiv">
-            <form action="javascript:offie.api_wrapper.runSearch()">
+            <form id="search-form" onsubmit="offie.api_wrapper.runSearch(); return false;">
                 <input name="enterAdr" type="text" id="adrBox" placeholder="Enter an address..."><br>
                 <img src="media/geo_icon_light.png" id="geolocate-button" alt="Search by location">
             </form>

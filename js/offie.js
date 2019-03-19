@@ -160,11 +160,20 @@ class ApiWrapper {
             geocodeComplete = new Promise (function(resolve, reject) {
                     this.geocoder.geocode({'address': address}, function(results, status) {
                         if(status === 'OK') {
-                            console.log(results);
-                            console.log(latlng);
-                            latlng = {lat: results[0].geometry.bounds.ma.j, lng: results[0].geometry.bounds.ga.j};
-                            console.log("Geocode successful: " + latlng.lat + ", " + latlng.lng);
-                            resolve(latlng);
+                            if(results[0].geometry.bounds === undefined) {
+                                alert("Sorry, we couldn't find that address. Try a more concise address, i.e. a post code or zip code.");
+                            }
+                            else {
+                                console.log(results);
+                                console.log(latlng);
+
+                                latlng = {lat: results[0].geometry.bounds.ma.j, lng: results[0].geometry.bounds.ga.j};
+                                console.log("Geocode successful: " + latlng.lat + ", " + latlng.lng);
+                                resolve(latlng);
+                            }
+                        }
+                        else if(status === 'ZERO_RESULTS') {
+                            alert("Sorry, we couldn't find that address. Try a more concise address, i.e. a post code or zip code.");
                         }
                         else {
                             console.log("Geocode ERROR: " + status);
@@ -507,6 +516,10 @@ class Utility {
 
         document.getElementById('geolocate-button').addEventListener('click', function() {
             this.geolocate();
+        }.bind(this));
+
+        document.getElementById('settings-submit').addEventListener('click', function() {
+            this.settings.updateSettings()
         }.bind(this));
     }
 }
