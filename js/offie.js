@@ -361,8 +361,7 @@ class View {
             newGLogo = document.createElement('img'),
             oldGeoIcon = document.getElementById('geolocate-button'),
             newGeoIcon = document.createElement('img'),
-            oldCloseIcon = document.getElementById('settings-close-icon'),
-            newCloseIcon = document.createElement('img'),
+
             cookieStr = '';
 
         newTheme.setAttribute('rel', 'stylesheet');
@@ -375,23 +374,18 @@ class View {
         newGeoIcon.setAttribute('id', 'geolocate-button');
         newGeoIcon.setAttribute('alt', 'Search by location');
 
-        newCloseIcon.setAttribute('id', 'settings-close-icon');
-        newCloseIcon.setAttribute('alt', 'Close settings pane');
-        newCloseIcon.setAttribute('width', '24px');
-        newCloseIcon.setAttribute('height', '24px');
+
 
         if(oldTheme.href.includes('dark')) {
             newTheme.setAttribute('href', 'css/light.css');
             newGLogo.setAttribute('src', 'media/powered_by_google_on_white.png');
             newGeoIcon.setAttribute('src', 'media/geo_icon_light.png');
-            newCloseIcon.setAttribute('src', 'media/close_icon.png');
             cookieStr = "theme=light";
         }
         else {
             newTheme.setAttribute('href', 'css/dark.css');
             newGLogo.setAttribute('src', 'media/powered_by_google_on_non_white.png');
             newGeoIcon.setAttribute('src', 'media/geo_icon_dark.png');
-            newCloseIcon.setAttribute('src', 'media/close_icon_dark.png');
             cookieStr = "theme=dark";
         }
 
@@ -399,7 +393,11 @@ class View {
             oldTheme.parentNode.replaceChild(newTheme, oldTheme);
             oldGLogo.parentNode.replaceChild(newGLogo, oldGLogo);
             oldGeoIcon.parentNode.replaceChild(newGeoIcon, oldGeoIcon);
-            oldCloseIcon.parentNode.replaceChild(newCloseIcon, oldCloseIcon);
+            //oldCloseIcon.parentNode.replaceChild(newCloseIcon, oldCloseIcon);
+            //this.utility.addEventListeners();
+            document.getElementById('geolocate-button').addEventListener('click', function() {
+                this.utility.geolocate();
+            }.bind(this));
             document.cookie = cookieStr;
             return newTheme;
         }
