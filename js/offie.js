@@ -8,48 +8,43 @@ class Offie {
     }
 
     init() {
-        try {
-            let api_wrapper = new ApiWrapper(),
-                results = new Results(),
-                utility = new Utility(),
-                view = new View(),
-                settings = new Settings();
+        let api_wrapper = new ApiWrapper(),
+            results = new Results(),
+            utility = new Utility(),
+            view = new View(),
+            settings = new Settings();
 
-            this.api_wrapper = api_wrapper;
-            this.results = results;
-            this.utility = utility;
-            this.view = view;
-            this.settings = settings;
+        this.api_wrapper = api_wrapper;
+        this.results = results;
+        this.utility = utility;
+        this.view = view;
+        this.settings = settings;
 
-            this.api_wrapper.results = results;
-            this.api_wrapper.utility = utility;
+        this.api_wrapper.results = results;
+        this.api_wrapper.utility = utility;
 
-            this.results.api_wrapper = api_wrapper;
-            this.results.utility = utility;
-            this.results.view = view;
+        this.results.api_wrapper = api_wrapper;
+        this.results.utility = utility;
+        this.results.view = view;
 
-            this.view.utility = utility;
-            this.view.settings = settings;
-            this.view.api_wrapper = api_wrapper;
-            this.view.initSettings();
+        this.view.utility = utility;
+        this.view.settings = settings;
+        this.view.api_wrapper = api_wrapper;
+        this.view.initSettings();
 
-            this.utility.api_wrapper = api_wrapper;
-            this.utility.results = results;
-            this.utility.view = view;
-            this.utility.settings = settings;
-            this.utility.addEventListeners();
+        this.utility.api_wrapper = api_wrapper;
+        this.utility.results = results;
+        this.utility.view = view;
+        this.utility.settings = settings;
+        this.utility.addEventListeners();
 
-            this.settings.view = view;
-            this.settings.loadSettings();
-
+        this.settings.view = view;
+        this.settings.loadSettings();
 
 
-            return this;
-        }
-        catch(error) {
-            console.error(error);
-            return false;
-        }
+
+        return this;
+
     }
 }
 
@@ -157,44 +152,51 @@ class ApiWrapper {
 
     geocodeAddress(address) {
         let latlng = {lat: 0, lng: 0},
-            geocodeComplete = new Promise (function(resolve, reject) {
-                    this.geocoder.geocode({'address': address}, function(results, status) {
-                        if(status === 'OK') {
-                            if(results[0].geometry.bounds === undefined) {
-                                alert("Sorry, we couldn't find that address. Try a more concise address, i.e. a post code or zip code.");
-                            }
-                            else {
-                                console.log(results);
-                                console.log(latlng);
 
-                                latlng = {lat: results[0].geometry.bounds.ma.j, lng: results[0].geometry.bounds.ga.j};
-                                console.log("Geocode successful: " + latlng.lat + ", " + latlng.lng);
-                                resolve(latlng);
-                            }
-                        }
-                        else if(status === 'ZERO_RESULTS') {
+         geocodeComplete = new Promise (function(resolve, reject) {
+                this.geocoder.geocode({'address': address}, function(results, status) {
+                    if(status === 'OK') {
+                        if(results[0].geometry.bounds === undefined) {
                             alert("Sorry, we couldn't find that address. Try a more concise address, i.e. a post code or zip code.");
                         }
                         else {
-                            console.log("Geocode ERROR: " + status);
-                            latlng = "Geocode ERROR: " + status;
-                            reject(status);
+                            console.log(results);
+                            console.log(latlng);
+
+                            latlng = {lat: results[0].geometry.bounds.ma.j, lng: results[0].geometry.bounds.ga.j};
+                            console.log("Geocode successful: " + latlng.lat + ", " + latlng.lng);
+                            resolve(latlng);
                         }
-                    });
-                }.bind(this)
-            );
+                    }
+                    else if(status === 'ZERO_RESULTS') {
+                        alert("Sorry, we couldn't find that address. Try a more concise address, i.e. a post code or zip code.");
+                        reject(status);
+                        this.searching = false;
+                    }
+                    else {
+                        console.log("Geocode ERROR: " + status);
+                        latlng = "Geocode ERROR: " + status;
+                        this.searching = false;
+                        reject(status);
+                    }
+                });
+            }.bind(this)
+        );
 
         geocodeComplete
             .then((fulfilled) => {
                 console.log("geocode complete: " + fulfilled);
                 this.utility.userLoc = latlng;
-                this.map.panTo(this.utility.userLoc)
+                this.map.panTo(this.utility.userLoc);
+                this.searching = false;
                 this.findOpenStores(latlng, 1000);
             })
             .catch((error) => {
+                this.searching = false;
                 console.log(error);
                 console.log("Geocode incomplete");
             });
+
 
         return latlng;
     }
@@ -500,7 +502,16 @@ class Utility {
         }
         else if(sortBy === 'name') {
             array.sort(function(a,b) {
-                return a.name - b.name;
+                let nameA = a.name.toLowerCase(),
+                    nameB = b.name.toLowerCase();
+
+                if(nameA > nameB)
+                    return 1;
+                else if(nameA < nameB)
+                    return -1;
+                else
+                    return 0;
+
             });
         }
     }
