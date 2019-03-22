@@ -7,6 +7,11 @@ class Offie {
         this.settings = undefined;
     }
 
+    /**Initialises the application, instantiating an object of each class and linking them
+     * together through properties. Also adds event listeners and loads and initialises
+     * settings based on cookie data (if it exists)
+     * @returns {Offie}
+     */
     init() {
         let api_wrapper = new ApiWrapper(),
             results = new Results(),
@@ -41,10 +46,7 @@ class Offie {
         this.settings.view = view;
         this.settings.loadSettings();
 
-
-
         return this;
-
     }
 }
 
@@ -58,20 +60,24 @@ class Settings {
         this.view = undefined;
     }
 
+    /**
+     * Toggles the display of the settings pane.
+     */
     settingsToggle() {
         console.log(this.hidden);
         if(this.hidden) {
             document.getElementById('settingsDiv').style.display = 'inline';
             this.hidden = false;
-            console.log();
         }
         else {
             document.getElementById('settingsDiv').style.display = 'none';
-            console.log("not");
             this.hidden = true;
         }
     }
 
+    /**
+     * Loads the user's settings from a cookie and reflects them within the class properties.
+     */
     loadSettings() {
         let cookie = document.cookie;
 
@@ -84,8 +90,11 @@ class Settings {
         }
     }
 
+    /**
+     * Updates the application based on the selected settings. Sets the units and theme of the page accordingly.
+     * @returns {Settings}
+     */
     updateSettings() {
-        this.language = document.getElementById('language-select').value;
         let unitRadios = document.getElementsByName('units');
         unitRadios.forEach(function(a) {
             console.log(a);
@@ -110,6 +119,9 @@ class Settings {
     }
 }
 
+/**
+ * A class for interfacing with the Google Maps JavaScript API. Handles geocoding of addresses and performing searches.
+ */
 class ApiWrapper {
     constructor() {
         this.map = undefined;
@@ -120,6 +132,11 @@ class ApiWrapper {
         this.storeTypes = ['convenience_store', 'gas_station', 'liquor_store', 'supermarket'];
     }
 
+    /**
+     * Passes the data from the 'Enter your address' text-field into the geocodeAddress() function, initiating a text-
+     * based search.
+     * @returns {boolean}
+     */
     runSearch() {
         if(document.getElementById("adrBox").value === "") {
             alert("Please enter an address before searching. Alternatively, use the geolocation feature.");
@@ -133,50 +150,34 @@ class ApiWrapper {
         }
     }
 
-    getDetails(placeId) {
-        let request = {
-            placeId: placeId,
-            fields: ['opening_hours']
-        };
-
-        this.service.getDetails(request, function(place, status) {
-            if(status == google.maps.places.PlacesServiceStatus.OK) {
-                console.log(place);
-            }
-            else {
-                console.log("Could not get opening times: " + status);
-            }
-        })
-
-    }
-
+    /**
+     * Geocodes a given address using the Google Geocoder API, returning a latitude and longitude value & passing it
+     * into the findOpenStores() function.
+     * @param address - The address to be geocoded.
+     * @returns {{lat: number, lng: number}} - The latitude and longitude received from the geocoder API.
+     */
     geocodeAddress(address) {
         let latlng = {lat: 0, lng: 0},
+            errorStr = 'Sorry, we couldn\'t find that address. Try a more concise address, i.e. a post code or zip code.',
 
          geocodeComplete = new Promise (function(resolve, reject) {
                 this.geocoder.geocode({'address': address}, function(results, status) {
                     if(status === 'OK') {
                         if(results[0].geometry.bounds === undefined) {
-                            alert("Sorry, we couldn't find that address. Try a more concise address, i.e. a post code or zip code.");
+                            alert(errorStr);
                         }
                         else {
-                            console.log(results);
-                            console.log(latlng);
-
                             latlng = {lat: results[0].geometry.bounds.ma.j, lng: results[0].geometry.bounds.ga.j};
-                            console.log("Geocode successful: " + latlng.lat + ", " + latlng.lng);
                             resolve(latlng);
                         }
                     }
                     else if(status === 'ZERO_RESULTS') {
-                        alert("Sorry, we couldn't find that address. Try a more concise address, i.e. a post code or zip code.");
+                        alert(errorStr);
                         reject(status);
-                        this.searching = false;
                     }
                     else {
                         console.log("Geocode ERROR: " + status);
                         latlng = "Geocode ERROR: " + status;
-                        this.searching = false;
                         reject(status);
                     }
                 });
@@ -201,6 +202,13 @@ class ApiWrapper {
         return latlng;
     }
 
+    /**
+     * Searches for open stores within a given radius of a given location. Repeats the search for each of the values
+     * given within the 'storeTypes' array of the class, to obtain a more substantial set of results. Results are sent
+     * to the processResults() function of the Results class for processing.
+     * @param location - the location to be searched, as an object containing a 'lat' and 'lng' property.
+     * @param radius - the distance in metres around the given location which should be searched.
+     */
     findOpenStores(location, radius) {
         for(let p of this.storeTypes) {
             if (p !== undefined) {
@@ -216,6 +224,9 @@ class ApiWrapper {
     }
 }
 
+/**
+ * A class for processing and then storing results returned from API calls that have been made in the Api_Wrapper class.
+ */
 class Results {
     constructor() {
         this.resultsArray = [];
@@ -225,11 +236,20 @@ class Results {
         this.api_wrapper = undefined;
     }
 
+    /**
+     * Acts as a callback function for the API call made in Api_Wrapper's findOpenStores() function. If the API returns
+     * a status of 'OK', this function will take the results array returned by Google and will process it into a format
+     * more useful for this application - extracting the important details like name, address, rating, and placeID.
+     * @param results - the array of results to be processed.
+     * @param status - the status returned by the Google Places Service.
+     */
     processResults(results, status) {
         if(status === google.maps.places.PlacesServiceStatus.OK) {
             for(let r in results) {
                 let latlng = {lat: results[r].geometry.location.lat(), lng: results[r].geometry.location.lng()};
-                let resultToAdd = new Shop( results[r].name,
+
+                let resultToAdd = new Shop(
+                    results[r].name,
                     results[r].vicinity,
                     latlng,
                     results[r].rating,
@@ -267,6 +287,10 @@ class Results {
     }
 }
 
+/**
+ * A simple class used to store information on a specific shop. Stores data regarding the name, address, coordinates,
+ * rating, placeID, and distance from the user.
+ */
 class Shop {
     constructor(name, address, latlng, rating, placeId, distance) {
         this.name = name;
@@ -278,6 +302,10 @@ class Shop {
     }
 }
 
+/**
+ * A class used to control elements of the view of the application. This includes displaying results, as well as
+ * switching between the two available themes.
+ */
 class View {
     constructor() {
         this.results = undefined;
@@ -286,6 +314,12 @@ class View {
         this.api_wrapper = undefined;
     }
 
+    /**
+     * Creates a <div> element for each result in the supplied array containing the information for each shop that has
+     * been found. Also adds markers to the interactive map, alongside tooltips for these markers.
+     * @param resultsArray - the array of results to build the divs, markers, and tooltips from.
+     * @param sortType - the sorting type to be applied when displaying the results ('distance', 'rating', or 'name')
+     */
     populateResults(resultsArray, sortType) {
         document.getElementById('results-container').innerHTML = "";
         if(resultsArray === null) {
@@ -299,8 +333,7 @@ class View {
                 newElement = document.createElement("div"),
                 newNode = resultsContainer.appendChild(newElement);
 
-            this.api_wrapper.getDetails(a.placeId);
-            newNode.setAttribute("id", a.placeId);
+            newNode.setAttribute("id",  "result-" + a.placeId);
             newNode.setAttribute("class", "result");
             if(resultsArray.length === count)
                 newNode.setAttribute("class", "result-last");
@@ -333,6 +366,10 @@ class View {
         }, this);
     }
 
+    /**
+     * Loads the users previously saved settings from a cookie, and updates the page by checking the relevant boxes in
+     * the 'Settings' pane, as well as changing the theme to darkmode if necessary.
+     */
     initSettings() {
         let cookie = document.cookie;
 
@@ -349,22 +386,11 @@ class View {
         }
     }
 
-    setStyleFromCookie() {
-        let cookie = document.cookie;
-
-        if(cookie.includes('theme=dark')) {
-            this.changeStyle();
-            document.getElementById('darkmode').checked = true;
-        }
-
-        if(cookie.includes('units=miles')) {
-            document.getElementById('units-mi').checked = true;
-        }
-        else {
-            document.getElementById('units-km').checked = true;
-        }
-    }
-
+    /**
+     * A function used to switch between the two available themes, which will update the CSS used for colouring elements,
+     * as well as which versions of the Google logo and Geolocate button will be used. Automatically detects which theme
+     * is currently active, and switches to the opposite one.
+     */
     changeStyle() {
         let oldTheme = document.getElementById('css-theme'),
             newTheme = document.createElement('link'),
@@ -404,22 +430,23 @@ class View {
             oldTheme.parentNode.replaceChild(newTheme, oldTheme);
             oldGLogo.parentNode.replaceChild(newGLogo, oldGLogo);
             oldGeoIcon.parentNode.replaceChild(newGeoIcon, oldGeoIcon);
-            //oldCloseIcon.parentNode.replaceChild(newCloseIcon, oldCloseIcon);
-            //this.utility.addEventListeners();
             document.getElementById('geolocate-button').addEventListener('click', function() {
                 this.utility.geolocate();
             }.bind(this));
             document.cookie = cookieStr;
-            return newTheme;
         }
         catch(error) {
             console.log("ERROR: Could not change style - " + error);
-            return error;
         }
 
     }
 }
 
+/**
+ * A class to contain all of the utility functions for the application, as well as functions which do not seamlessly
+ * fit into any of the other more specific classes. Handles sorting, HTML5 geolocation, generating URLs for Maps links,
+ * determining the distance between the user and a shop, and adding event listeners to certain buttons.
+ */
 class Utility {
     constructor() {
         this.userLoc = {lat: 0, lng: 0};
@@ -429,16 +456,27 @@ class Utility {
         this.settings = undefined;
     }
 
+    /**
+     * Repopulates the results based on the selection of a new Sorting algorithm..
+     * @param sortType - the type of sorting to be employed ('distance', 'rating', or 'name')
+     */
     sortChange(sortType) {
         if(this.results.resultsArray !== []) {
             this.view.populateResults(this.results.resultsArray, sortType);
         }
     }
 
+    /**
+     * Returns the value of the 'Sort-by' drop-down box, to determine how results should be sorted.
+     * @returns string - the sort type ('distance', 'rating', or 'name')
+     */
     getSortType() {
         return document.getElementById('sort-dropdown').value;
     }
 
+    /**
+     * Uses the HTML5 Geolocator to return coordinates (latitude, longitude) based on the users current position.
+     */
     geolocate() {
         if(navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(function(position) {
@@ -452,10 +490,21 @@ class Utility {
         }
     }
 
+    /**
+     * Converts from degrees to radians, for determining the distance between two locations.
+     * @param degrees - the degree value to be converted.
+     * @returns {number} - the given degrees, in radians.
+     */
     static convertDegreesToRadians(degrees) {
         return degrees * Math.PI / 180;
     }
 
+    /**
+     * Employs the Haversine formula to determine the distance between two points on a sphere. Used for finding the
+     * distance between a users location and a store.
+     * @param shopLoc - the coordinates of the shop of which to find the distance from.
+     * @returns {number} - the distance between the two points, in either km or mi (determined by the users settings).
+     */
     getDistance(shopLoc) {
         let radius = 6378,
             lat = Utility.convertDegreesToRadians(this.userLoc.lat - shopLoc.lat),
@@ -477,6 +526,11 @@ class Utility {
         return distance;
     }
 
+    /**
+     * Generates a Google Maps URL for a specific place.
+     * @param store - the place to generate a URL for.
+     * @returns {string | *} - the URL of the place on Google Maps.
+     */
     getMapsUrl(store) {
         let url = "https://www.google.com/maps/search/?api=1&query=",
             linkText = store.address;
@@ -486,6 +540,12 @@ class Utility {
         return linkText.link(url);
     }
 
+    /**
+     * Sorts the given array into a given order, using a specific algorithm. Can be used to sort an array by name,
+     * distance, or rating.
+     * @param array - the array of Shops to be sorted.
+     * @param sortBy - the method to use when sorting ('distance', 'rating', or 'name').
+     */
     sortResults(array, sortBy) {
         if(sortBy === 'distance') {
             array.sort(function(a,b) {
@@ -516,6 +576,10 @@ class Utility {
         }
     }
 
+    /**
+     * Adds event listeners to the settings icon, the settings 'close' icon, the geolocation button, and the settings
+     * 'submit' button.
+     */
     addEventListeners() {
         document.getElementById('settings-icon').addEventListener('click', function() {
             this.settings.settingsToggle();
