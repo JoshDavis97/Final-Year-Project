@@ -89,14 +89,13 @@ class Settings {
 
     /**
      * Updates the application based on the selected settings. Sets the units and theme of the page accordingly.
-     * @returns {Settings}
      */
     updateSettings() {
         let unitRadios = document.getElementsByName('units');
-        unitRadios.forEach(function(a) {
-            if(a.checked) {
-                this.units = a.value;
-                document.cookie = "units=" + a.value;
+        unitRadios.forEach(function(radio) {
+            if(radio.checked) {
+                this.units = radio.value;
+                document.cookie = "units=" + radio.value;
             }
         }.bind(this));
 
@@ -110,8 +109,6 @@ class Settings {
             this.view.changeStyle();
             this.theme = 'light';
         }
-
-        return this;
     }
 }
 
