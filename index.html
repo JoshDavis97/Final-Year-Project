@@ -18,7 +18,7 @@
             <div id="titleDiv">offie.</div><br>
 
             <div id="searchDiv">
-                <form id="search-form" onsubmit="offie.api_wrapper.runSearch(); return false;">
+                <form id="search-form" onsubmit="offie.apiWrapper.runSearch(); return false;">
                     <input name="enterAdr" type="text" id="adrBox" placeholder="Enter an address..."><br>
                     <img src="media/geo_icon_light.png" id="geolocate-button" alt="Search by location">
                 </form>
@@ -79,12 +79,12 @@
 
 		function loadMaps() {
 
-            offie.api_wrapper.map = new google.maps.Map(document.getElementById('mapDiv'), {
+            offie.apiWrapper.map = new google.maps.Map(document.getElementById('mapDiv'), {
                 center: {lat: 51.51279, lng: -0.09184},
                 zoom: 15
             });
-            offie.api_wrapper.service = new google.maps.places.PlacesService(offie.api_wrapper.map);
-            offie.api_wrapper.geocoder = new google.maps.Geocoder();
+            offie.apiWrapper.service = new google.maps.places.PlacesService(offie.apiWrapper.map);
+            offie.apiWrapper.geocoder = new google.maps.Geocoder();
 		}
 	</script>
 

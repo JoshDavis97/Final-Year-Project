@@ -1,6 +1,6 @@
 class Offie {
     constructor() {
-        this.api_wrapper = undefined;
+        this.apiWrapper = undefined;
         this.results = undefined;
         this.utility = undefined;
         this.view = undefined;
@@ -13,32 +13,32 @@ class Offie {
      * @returns {Offie}
      */
     init() {
-        let api_wrapper = new ApiWrapper(),
+        let apiWrapper = new ApiWrapper(),
             results = new Results(),
             utility = new Utility(),
             view = new View(),
             settings = new Settings();
 
-        this.api_wrapper = api_wrapper;
+        this.apiWrapper = apiWrapper;
         this.results = results;
         this.utility = utility;
         this.view = view;
         this.settings = settings;
 
-        this.api_wrapper.results = results;
-        this.api_wrapper.utility = utility;
+        this.apiWrapper.results = results;
+        this.apiWrapper.utility = utility;
 
-        this.results.api_wrapper = api_wrapper;
+        this.results.apiWrapper = apiWrapper;
         this.results.utility = utility;
         this.results.view = view;
 
         this.view.utility = utility;
         this.view.settings = settings;
-        this.view.api_wrapper = api_wrapper;
+        this.view.apiWrapper = apiWrapper;
         this.view.results = results;
         this.view.initViewFromCookie();
 
-        this.utility.api_wrapper = api_wrapper;
+        this.utility.apiWrapper = apiWrapper;
         this.utility.results = results;
         this.utility.view = view;
         this.utility.settings = settings;
@@ -53,10 +53,8 @@ class Offie {
 
 class Settings {
     constructor() {
-        this.language = 'eng';
         this.units = 'miles';
         this.theme = 'light';
-        this.showMap = true;
         this.hidden = true;
         this.view = undefined;
     }
@@ -82,13 +80,11 @@ class Settings {
     loadSettings() {
         let cookie = document.cookie;
 
-        if(cookie.includes('theme=dark')) {
+        if(cookie.includes('theme=dark'))
             this.theme = 'dark';
-        }
 
-        if(cookie.includes('units=kilometres')) {
+        if(cookie.includes('units=kilometres'))
             this.units = 'kilometres';
-        }
     }
 
     /**
@@ -98,7 +94,6 @@ class Settings {
     updateSettings() {
         let unitRadios = document.getElementsByName('units');
         unitRadios.forEach(function(a) {
-            console.log(a);
             if(a.checked) {
                 this.units = a.value;
                 document.cookie = "units=" + a.value;
@@ -234,7 +229,7 @@ class Results {
         this.timesProcessed = 0;
         this.utility = undefined;
         this.view = undefined;
-        this.api_wrapper = undefined;
+        this.apiWrapper = undefined;
     }
 
     /**
@@ -277,7 +272,7 @@ class Results {
             }
 
             this.timesProcessed++;
-            if(this.timesProcessed === this.api_wrapper.storeTypes.length) {
+            if(this.timesProcessed === this.apiWrapper.storeTypes.length) {
                 this.view.populateResults(this.resultsArray, this.utility.getSortType());
                 this.timesProcessed = 0;
             }
@@ -349,7 +344,7 @@ class View {
         this.results = undefined;
         this.utility = undefined;
         this.settings = undefined;
-        this.api_wrapper = undefined;
+        this.apiWrapper = undefined;
     }
 
     /**
@@ -403,12 +398,12 @@ class View {
 
         let marker = new google.maps.Marker({
             position: shop.latlng,
-            map: this.api_wrapper.map,
+            map: this.apiWrapper.map,
             title: shop.name
         });
 
         marker.addListener('click', function() {
-            infoWindow.open(this.api_wrapper.map, marker);
+            infoWindow.open(this.apiWrapper.map, marker);
         }.bind(this));
     }
 
@@ -444,7 +439,6 @@ class View {
             newGLogo = document.createElement('img'),
             oldGeoIcon = document.getElementById('geolocate-button'),
             newGeoIcon = document.createElement('img'),
-
             cookieStr = '';
 
         newTheme.setAttribute('rel', 'stylesheet');
@@ -456,8 +450,6 @@ class View {
 
         newGeoIcon.setAttribute('id', 'geolocate-button');
         newGeoIcon.setAttribute('alt', 'Search by location');
-
-
 
         if(oldTheme.href.includes('dark')) {
             newTheme.setAttribute('href', 'css/light.css');
@@ -476,10 +468,12 @@ class View {
             oldTheme.parentNode.replaceChild(newTheme, oldTheme);
             oldGLogo.parentNode.replaceChild(newGLogo, oldGLogo);
             oldGeoIcon.parentNode.replaceChild(newGeoIcon, oldGeoIcon);
+
+            document.cookie = cookieStr;
+
             document.getElementById('geolocate-button').addEventListener('click', function() {
                 this.utility.geolocate();
             }.bind(this));
-            document.cookie = cookieStr;
         }
         catch(error) {
             console.log("ERROR: Could not change style - " + error);
@@ -496,7 +490,7 @@ class View {
 class Utility {
     constructor() {
         this.userLoc = {lat: 0, lng: 0};
-        this.api_wrapper = undefined;
+        this.apiWrapper = undefined;
         this.results = undefined;
         this.view = undefined;
         this.settings = undefined;
@@ -528,8 +522,8 @@ class Utility {
             navigator.geolocation.getCurrentPosition(function(position) {
                 let latlng = {lat: position.coords.latitude, lng: position.coords.longitude};
                 this.userLoc = latlng;
-                this.api_wrapper.map.panTo(this.userLoc);
-                this.api_wrapper.findOpenStores(latlng, 1000);
+                this.apiWrapper.map.panTo(this.userLoc);
+                this.apiWrapper.findOpenStores(latlng, 1000);
             }.bind(this));
         } else {
             alert("Your browser doesn't support location search.");
