@@ -351,19 +351,27 @@ class View {
                 unitsStr = 'km away';
 
             let str = a.name +  ratingStr + a.distance.toFixed(2) + unitsStr + "</br>" + this.utility.getMapsUrl(a);
-            let infoWindow = new google.maps.InfoWindow({
-                content: str
-            });
-            let marker = new google.maps.Marker({
-                position: a.latlng,
-                map: this.api_wrapper.map,
-                title: a.name
-            });
-            marker.addListener('click', function() {
-                infoWindow.open(this.api_wrapper.map, marker);
-            }.bind(this));
             newNode.innerHTML = str;
+
+            this.addToMap(a, str);
+
         }, this);
+    }
+
+    addToMap(shop, infoString) {
+        let infoWindow = new google.maps.InfoWindow({
+            content: infoString
+        });
+
+        let marker = new google.maps.Marker({
+            position: shop.latlng,
+            map: this.api_wrapper.map,
+            title: shop.name
+        });
+
+        marker.addListener('click', function() {
+            infoWindow.open(this.api_wrapper.map, marker);
+        }.bind(this));
     }
 
     /**
