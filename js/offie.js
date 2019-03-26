@@ -36,7 +36,7 @@ class Offie {
         this.view.settings = settings;
         this.view.api_wrapper = api_wrapper;
         this.view.results = results;
-        this.view.initSettings();
+        this.view.initViewFromCookie();
 
         this.utility.api_wrapper = api_wrapper;
         this.utility.results = results;
@@ -416,7 +416,7 @@ class View {
      * Loads the users previously saved settings from a cookie, and updates the page by checking the relevant boxes in
      * the 'Settings' pane, as well as changing the theme to darkmode if necessary.
      */
-    initSettings() {
+    initViewFromCookie() {
         let cookie = document.cookie;
 
         if(cookie.includes('theme=dark')) {
