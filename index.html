@@ -4,15 +4,49 @@
 <head>
     <meta charset="UTF-8">
     <title>offie.</title>
-	<link rel="stylesheet" href="css/newstyle.css"  type="text/css">
+	<link rel="stylesheet" href="css/style.css"  type="text/css">
     <link rel="stylesheet" href="css/light.css"  type="text/css" id="css-theme">
     <link rel="icon" type="image/png" href="media/favicon.ico">
 	<script src="js/offie.js"></script>
 	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB5RcAn-bzJjBFJIwlzNSY0aJfl7mP-2EE&libraries=places&callback=loadMaps" async defer></script>
-
 </head>
 
 <body>
+    <div id="column-left" class="column">
+
+        <div id="header-div">
+            <div id="titleDiv">offie.</div><br>
+
+            <div id="searchDiv">
+                <form id="search-form" onsubmit="offie.api_wrapper.runSearch(); return false;">
+                    <input name="enterAdr" type="text" id="adrBox" placeholder="Enter an address..."><br>
+                    <img src="media/geo_icon_light.png" id="geolocate-button" alt="Search by location">
+                </form>
+            </div>
+
+            <div id="sort-container">
+                <span>Sort by:</span>
+                <select id="sort-dropdown" onchange="offie.utility.sortChange(this.value.toLowerCase())">
+                    <option value="distance">Distance</option>
+                    <option value="rating">Rating</option>
+                    <option value="name">Name</option>
+                </select>
+            </div>
+        </div>
+
+        <div id="results-container"></div><br>
+
+        <div id="footer">
+            <img id="google-logo" src="media/powered_by_google_on_white.png" alt="Powered by Google">
+        </div>
+
+    </div>
+
+
+    <div id="column-right" class="column">
+        <div id="mapDiv"></div>
+    </div>
+
     <img src="media/settings_icon.png" id="settings-icon" alt="Settings" width="24" height="24">
 
     <div id="settingsDiv">
@@ -33,51 +67,10 @@
                     <td><label for="units-mi">Miles</label></td>
                     <td><input type="radio" id="units-mi" class="unit-radios" name="units" value="miles"><br></td>
                 </tr>
-            </table>
+            </table><br>
 
-            <h3>Language</h3>
-            <select id="language-select">
-                <option value="eng">English</option>
-                <option value="swe">Swedish</option>
-                <option value="nor">Norwegian</option>
-            </select><br><br>
             <input type="submit" value="Update settings" id="settings-submit">
         </form>
-    </div>
-
-    <div id="column-left" class="column">
-
-        <div id="header-div">
-            <div id="titleDiv">offie.</div><br>
-
-            <div id="searchDiv">
-            <form id="search-form" onsubmit="offie.api_wrapper.runSearch(); return false;">
-                <input name="enterAdr" type="text" id="adrBox" placeholder="Enter an address..."><br>
-                <img src="media/geo_icon_light.png" id="geolocate-button" alt="Search by location">
-            </form>
-            </div>
-
-            <div id="sort-container">
-                <span>Sort by: </span>
-                <select id="sort-dropdown" onchange="offie.utility.sortChange(this.value.toLowerCase())">
-                    <option value="distance">Distance</option>
-                    <option value="rating">Rating</option>
-                    <option value="name">Name</option>
-                </select>
-            </div>
-        </div>
-
-        <div id="results-container"></div>
-        <br>
-        <div id="footer">
-            <img id="google-logo" src="media/powered_by_google_on_white.png" alt="Powered by Google">
-        </div>
-    </div>
-
-
-    <div id="column-right" class="column">
-        <div id="mapDiv">
-        </div>
     </div>
 
 	<script>
@@ -94,6 +87,7 @@
             offie.api_wrapper.geocoder = new google.maps.Geocoder();
 		}
 	</script>
+
 </body>
 
 </html>
