@@ -35,6 +35,7 @@ class Offie {
         this.view.utility = utility;
         this.view.settings = settings;
         this.view.api_wrapper = api_wrapper;
+        this.view.results = results;
         this.view.initSettings();
 
         this.utility.api_wrapper = api_wrapper;
@@ -285,6 +286,43 @@ class Results {
             console.log("ERROR: PlacesServiceStatus - " + status);
         }
     }
+
+    /**
+     * Sorts the given array into a given order, using a specific algorithm. Can be used to sort an array by name,
+     * distance, or rating.
+     * @param array - the array of Shops to be sorted.
+     * @param sortBy - the method to use when sorting ('distance', 'rating', or 'name').
+     */
+    sortResults(array, sortBy) {
+        if(sortBy === 'distance') {
+            array.sort(function(a,b) {
+                return a.distance - b.distance;
+            });
+        }
+        else if(sortBy === 'rating') {
+            array.sort(function(a,b) {
+                if(a.rating === b.rating) {
+                    return b.distance - a.distance;
+                }
+                return b.rating - a.rating;
+            });
+        }
+        else if(sortBy === 'name') {
+            array.sort(function(a,b) {
+                let nameA = a.name.toLowerCase(),
+                    nameB = b.name.toLowerCase();
+
+                if(nameA > nameB)
+                    return 1;
+                else if(nameA < nameB)
+                    return -1;
+                else
+                    return 0;
+
+            });
+        }
+    }
+
 }
 
 /**
@@ -326,7 +364,7 @@ class View {
             resultsArray = this.results.resultsArray;
         }
         let count = 0;
-        this.utility.sortResults(resultsArray, sortType);
+        this.results.sortResults(resultsArray, sortType);
         resultsArray.forEach(function(a) {
             count++;
             let resultsContainer = document.getElementById('results-container'),
@@ -546,42 +584,6 @@ class Utility {
         url += store.name + "&query_place_id=" + store.placeId;
 
         return linkText.link(url);
-    }
-
-    /**
-     * Sorts the given array into a given order, using a specific algorithm. Can be used to sort an array by name,
-     * distance, or rating.
-     * @param array - the array of Shops to be sorted.
-     * @param sortBy - the method to use when sorting ('distance', 'rating', or 'name').
-     */
-    sortResults(array, sortBy) {
-        if(sortBy === 'distance') {
-            array.sort(function(a,b) {
-                return a.distance - b.distance;
-            });
-        }
-        else if(sortBy === 'rating') {
-            array.sort(function(a,b) {
-                if(a.rating === b.rating) {
-                    return b.distance - a.distance;
-                }
-                return b.rating - a.rating;
-            });
-        }
-        else if(sortBy === 'name') {
-            array.sort(function(a,b) {
-                let nameA = a.name.toLowerCase(),
-                    nameB = b.name.toLowerCase();
-
-                if(nameA > nameB)
-                    return 1;
-                else if(nameA < nameB)
-                    return -1;
-                else
-                    return 0;
-
-            });
-        }
     }
 
     /**
