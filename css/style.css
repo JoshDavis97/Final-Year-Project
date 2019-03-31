@@ -57,6 +57,8 @@ body {
     padding: 2px;
 }
 
+#geolocate-button { width: 18px; height: 24px;}
+
 #searchDiv img {
     position: absolute;
     top: 2px;
@@ -128,7 +130,6 @@ body {
     margin: 2px;
     width: 200px;
     z-index: 999;
-
 }
 
 #settingsDiv h2 {
@@ -140,15 +141,79 @@ body {
 }
 
 #footer {
-    position: fixed;
+    position: relative;
     bottom: 2px;
     display: none;
 
 }
 
-@media (max-width: 965px) {
+@media only screen and (max-width: 965px) {
     #column-right {
         display: none;
+    }
+
+    #column-left {
+        width: 100%;
+    }
+    .result, .result-last {
+        width: 80%;
+    }
+
+
+    #footer {
+        display: inline;
+    }
+}
+
+@media only screen and (orientation: portrait) and (-webkit-min-device-pixel-ratio: 2), (-webkit-min-device-pixel-ratio: 3) {
+    #results-container {
+        margin-top: 180px;
+        width: 100%;
+        height: 100%;
+    }
+
+    .result, .result-last {
+        width: 90%;
+        font-size: 36pt;
+        overflow: hidden;
+    }
+
+
+    #column-right {
+        display: none;
+    }
+
+    #titleDiv {
+        font-size: 90pt;
+    }
+
+    #searchDiv input {
+        width: 600px;
+        height: 70px;
+        font-size: 42pt;
+    }
+
+    #geolocate-button { width: 45px; height: 60px;}
+
+    #settings-icon {
+        width: 90px;
+        height: 90px;
+    }
+
+    #sort-by-span {
+        font-size: 40pt;
+    }
+
+    span {
+        font-size: 40pt;
+    }
+
+    #sort-dropdown {
+        height: 70px;
+        width: 250px;
+        font-size: 30pt;
+        text-align: center;
+        alignment: center;
     }
 
     #column-left {
@@ -158,5 +223,30 @@ body {
     #footer {
         display: inline;
     }
+
+    #settings-close-icon {
+        right: 10px;
+        height: 80px;
+        width: 80px;
+    }
+
+    #settingsDiv {
+        width: 100%;
+        font-size: 40pt;
+    }
+
+    #settings-submit {
+        height: 70px;
+        width: 400px;
+        font-size: 30pt;
+    }
+
+    * {
+        -webkit-font-smoothing: subpixel-antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+
+
+    .unit-radios, #darkmode { width: 40px; height: 40px; }
 }
 
