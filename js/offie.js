@@ -151,31 +151,59 @@ class ApiWrapper {
      */
     geocodeAddress(address) {
         let latlng = {lat: 0, lng: 0},
+            alertStr = 'Sorry, we couldn\'t find that address. Try a more concise address, i.e. a post code or zip code.'
+
+        this.geocoder.geocode({'address': address}, function(results, status) {
+            if(status === 'OK') {
+                if(results[0].geometry.bounds === undefined) {
+                    alert(alertStr);
+                }
+                else {
+                    latlng = {lat: results[0].geometry.bounds.ma.j, lng: results[0].geometry.bounds.ga.j};
+                    this.utility.userLoc = latlng;
+                    this.map.panTo(this.utility.userLoc);
+                    this.findOpenStores(latlng, 1000);
+                }
+            }
+            else if(status === 'ZERO_RESULTS') {
+                alert(alertStr);
+            }
+            else {
+                console.log("geocoder.geocode() ERROR: " + status);
+            }
+        }.bind(this));
+
+        return latlng;
+    }
+
+
+    /*geocodeAddress(address) {
+        let latlng = {lat: 0, lng: 0},
             errorStr = 'Sorry, we couldn\'t find that address. Try a more concise address, i.e. a post code or zip code.',
 
-         geocodeComplete = new Promise (function(resolve, reject) {
-                this.geocoder.geocode({'address': address}, function(results, status) {
-                    if(status === 'OK') {
-                        if(results[0].geometry.bounds === undefined) {
+            geocodeComplete = new Promise (function(resolve, reject) {
+                    this.geocoder.geocode({'address': address}, function(results, status) {
+                        if(status === 'OK') {
+                            if(results[0].geometry.bounds === undefined) {
+                                alert(errorStr);
+                            }
+                            else {
+                                latlng = {lat: results[0].geometry.bounds.ma.j, lng: results[0].geometry.bounds.ga.j};
+                                resolve(latlng);
+                            }
+                        }
+                        else if(status === 'ZERO_RESULTS') {
                             alert(errorStr);
+                            reject(status);
                         }
                         else {
-                            latlng = {lat: results[0].geometry.bounds.ma.j, lng: results[0].geometry.bounds.ga.j};
-                            resolve(latlng);
+                            console.log("Geocode ERROR: " + status);
+                            latlng = "Geocode ERROR: " + status;
+                            reject(status);
                         }
-                    }
-                    else if(status === 'ZERO_RESULTS') {
-                        alert(errorStr);
-                        reject(status);
-                    }
-                    else {
-                        console.log("Geocode ERROR: " + status);
-                        latlng = "Geocode ERROR: " + status;
-                        reject(status);
-                    }
-                });
-            }.bind(this)
-        );
+                    });
+                }.bind(this)
+            );
 
         geocodeComplete
             .then((fulfilled) => {
@@ -193,7 +221,7 @@ class ApiWrapper {
 
 
         return latlng;
-    }
+    }*/
 
     /**
      * Searches for open stores within a given radius of a given location. Repeats the search for each of the values
@@ -388,6 +416,11 @@ class View {
         }, this);
     }
 
+    /**
+     * Adds a map marker and an info window to the interactive Google Map for the given shop.
+     * @param shop - The shop to add a marker for.
+     * @param infoString - The string to be displayed in the info window.
+     */
     addToMap(shop, infoString) {
         let infoWindow = new google.maps.InfoWindow({
             content: infoString
@@ -560,7 +593,8 @@ class Utility {
         if(this.settings.units === 'miles') {
             distance = distance * 0.62137;
         }
-        return distance;
+
+        return parseFloat(distance.toFixed(3));
     }
 
     /**
